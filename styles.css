@@ -271,20 +271,6 @@ body {
     animation: fadeIn 0.8s ease-out;
 }
 
-.crv-badge {
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--crv-accent);
-    border: 1px solid var(--crv-accent-dim);
-    padding: 6px 20px;
-    border-radius: 100px;
-    margin-bottom: 20px;
-    background: rgba(0, 212, 255, 0.05);
-}
-
 .crv-title {
     font-family: var(--font-display);
     font-size: clamp(2.5rem, 10vw, 5.5rem);
