@@ -120,16 +120,10 @@ body {
 /* ─── Panel: Home ─── */
 
 #panel-home {
-    background-image: url('Vertical.png');
+    background-image: url('https://assets.easybroker.com/property_images/4016864/66313106/EB-OK6864.jpg?version=1695158123');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-}
-
-@media (orientation: landscape) {
-    #panel-home {
-        background-image: url('Horizontal.png');
-    }
 }
 
 .overlay {
@@ -139,7 +133,7 @@ body {
 }
 
 .overlay-home {
-    background: var(--black-30);
+    background: rgba(0, 0, 0, 0.45);
 }
 
 .countdown-container {
@@ -212,15 +206,15 @@ body {
 
 #panel-crv {
     background: var(--crv-primary);
+    background-image: url('https://www.autonews.com/resizer/v2/USSBI6GMWNG53BY77AAPMU2OGI.jpg?auth=c1757ddf1f890a9d9572cd66ebea29b21a9929f6bf814e3570277edbc9176cc3');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     overflow: hidden;
 }
 
 .overlay-crv {
-    background: radial-gradient(
-        ellipse 80% 60% at 50% 40%,
-        rgba(0, 212, 255, 0.06) 0%,
-        transparent 70%
-    );
+    background: rgba(0, 0, 0, 0.5);
 }
 
 /* Animated background shapes */
