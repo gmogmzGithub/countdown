@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Tab Navigation -->
+    <nav class="tab-nav" role="tablist" aria-label="Countdown tabs">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home" data-tab="home">
+            <span class="tab-icon">&#9737;</span>
+            <span class="tab-label">Home</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-crv" id="tab-crv" data-tab="crv">
+            <span class="tab-icon">&#9881;</span>
+            <span class="tab-label">CR-V 2028</span>
+        </button>
+    </nav>
+
+    <!-- Panel: Home Countdown -->
+    <section class="panel active" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+        <div class="overlay overlay-home"></div>
+        <div class="countdown-container">
+            <div class="countdown-label">Counting down to</div>
+            <div id="countdown-home" class="countdown-text">Loading...</div>
+            <div class="countdown-date">December 17, 2027</div>
+        </div>
+    </section>
+
+    <!-- Panel: Honda CR-V 2028 -->
+    <section class="panel" id="panel-crv" role="tabpanel" aria-labelledby="tab-crv" hidden>
+        <div class="overlay overlay-crv"></div>
+        <div class="crv-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="countdown-container crv-container">
+            <div class="crv-badge">HONDA</div>
+            <h2 class="crv-title">CR-V 2028</h2>
+            <div class="crv-subtitle">Next Generation Concept</div>
+            <div class="countdown-grid" id="countdown-crv">
+                <div class="countdown-unit">
+                    <span class="countdown-number" id="crv-years">0</span>
+                    <span class="countdown-unit-label">Years</span>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-unit">
+                    <span class="countdown-number" id="crv-months">0</span>
+                    <span class="countdown-unit-label">Months</span>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-unit">
+                    <span class="countdown-number" id="crv-days">0</span>
+                    <span class="countdown-unit-label">Days</span>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-unit">
+                    <span class="countdown-number" id="crv-hours">0</span>
+                    <span class="countdown-unit-label">Hours</span>
+                </div>
+            </div>
+            <div class="crv-target-date">November 2028</div>
+            <div class="crv-tagline">The future of adventure awaits</div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
