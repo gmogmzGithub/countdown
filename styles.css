@@ -160,10 +160,12 @@ body {
     color: var(--white);
     letter-spacing: -0.02em;
     line-height: 1;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
     text-shadow:
+        0 0 30px rgba(255, 255, 255, 0.4),
         0 2px 10px var(--black-50),
-        0 4px 20px var(--black-30);
+        0 4px 30px var(--black-30);
+    animation: fadeIn 0.8s ease-out;
 }
 
 .countdown-label {
