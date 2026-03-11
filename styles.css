@@ -367,6 +367,217 @@ body {
     font-style: italic;
 }
 
+/* ─── Panel: Mommy Makeover ─── */
+
+#panel-makeover {
+    background-image: url('https://images.unsplash.com/photo-1621021544363-02108c715c1b?q=80&w=2068&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.overlay-makeover {
+    background: linear-gradient(
+        160deg,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(30, 10, 20, 0.5) 40%,
+        rgba(80, 20, 50, 0.35) 100%
+    );
+}
+
+/* Floating sparkle particles */
+.makeover-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 200, 170, 0.9), rgba(255, 180, 150, 0) 70%);
+    animation: sparkle 6s ease-in-out infinite;
+}
+
+.particle-1 {
+    top: 15%;
+    left: 20%;
+    width: 8px;
+    height: 8px;
+    animation-delay: 0s;
+    animation-duration: 5s;
+}
+
+.particle-2 {
+    top: 25%;
+    right: 15%;
+    width: 5px;
+    height: 5px;
+    animation-delay: 1.2s;
+    animation-duration: 7s;
+}
+
+.particle-3 {
+    bottom: 30%;
+    left: 12%;
+    width: 7px;
+    height: 7px;
+    animation-delay: 2.5s;
+    animation-duration: 6s;
+}
+
+.particle-4 {
+    top: 60%;
+    right: 22%;
+    width: 4px;
+    height: 4px;
+    animation-delay: 0.8s;
+    animation-duration: 8s;
+}
+
+.particle-5 {
+    top: 40%;
+    left: 55%;
+    width: 6px;
+    height: 6px;
+    animation-delay: 3.5s;
+    animation-duration: 5.5s;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+    }
+    25% {
+        opacity: 1;
+        transform: translateY(-20px) scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translateY(-40px) scale(0.8);
+    }
+    75% {
+        opacity: 0.9;
+        transform: translateY(-15px) scale(1.1);
+    }
+}
+
+.makeover-container {
+    gap: 0;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.makeover-badge {
+    font-family: var(--font-primary);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255, 200, 180, 0.8);
+    padding: 6px 20px;
+    border: 1px solid rgba(255, 200, 180, 0.25);
+    border-radius: 50px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(255, 180, 150, 0.08);
+}
+
+.makeover-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 12vw, 6.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-align: center;
+    margin-bottom: 16px;
+    background: linear-gradient(
+        135deg,
+        #fff 0%,
+        #ffd4c4 30%,
+        #ffb8a0 50%,
+        #ffc8b0 70%,
+        #fff 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerText 4s ease-in-out infinite;
+    text-shadow: none;
+}
+
+@keyframes shimmerText {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.makeover-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 200, 170, 0.6), transparent);
+    margin-bottom: 32px;
+    border-radius: 2px;
+}
+
+.makeover-grid {
+    margin-bottom: 32px;
+}
+
+.makeover-unit {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 200, 170, 0.15);
+    border-radius: 20px;
+    min-width: 72px;
+    padding: 16px 14px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.makeover-unit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 180, 150, 0.15);
+}
+
+.makeover-number {
+    background: linear-gradient(180deg, #fff 30%, rgba(255, 200, 180, 0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.makeover-sep {
+    color: rgba(255, 200, 170, 0.3);
+}
+
+.makeover-label {
+    color: rgba(255, 200, 180, 0.5);
+}
+
+.makeover-date {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 200, 180, 0.7);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+}
+
+.makeover-tagline {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--white-50);
+    letter-spacing: 0.05em;
+    font-style: italic;
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 768px) {
@@ -406,6 +617,19 @@ body {
     .crv-subtitle {
         margin-bottom: 24px;
     }
+
+    .makeover-unit {
+        min-width: 52px;
+        padding: 10px 8px;
+    }
+
+    .makeover-title {
+        font-size: clamp(2.5rem, 14vw, 5rem);
+    }
+
+    .makeover-grid {
+        gap: 4px;
+    }
 }
 
 /* ─── Accessibility: Reduced Motion ─── */
@@ -418,7 +642,12 @@ body {
 
     .shape-1,
     .shape-2,
-    .shape-3 {
+    .shape-3,
+    .particle {
+        animation: none;
+    }
+
+    .makeover-title {
         animation: none;
     }
 

@@ -20,6 +20,10 @@
             <span class="tab-icon">&#9881;</span>
             <span class="tab-label">Acura RDX</span>
         </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-makeover" id="tab-makeover" data-tab="makeover">
+            <span class="tab-icon">&#10047;</span>
+            <span class="tab-label">Makeover</span>
+        </button>
     </nav>
 
     <!-- Panel: Home Countdown -->
@@ -67,6 +71,46 @@
             </div>
             <div class="crv-target-date">November 2028</div>
             <div class="crv-tagline">The future of adventure awaits</div>
+        </div>
+    </section>
+
+    <!-- Panel: Mommy Makeover -->
+    <section class="panel" id="panel-makeover" role="tabpanel" aria-labelledby="tab-makeover" hidden>
+        <div class="overlay overlay-makeover"></div>
+        <div class="makeover-particles">
+            <div class="particle particle-1"></div>
+            <div class="particle particle-2"></div>
+            <div class="particle particle-3"></div>
+            <div class="particle particle-4"></div>
+            <div class="particle particle-5"></div>
+        </div>
+        <div class="countdown-container makeover-container">
+            <div class="makeover-badge">The Countdown Is On</div>
+            <h2 class="makeover-title">Mommy<br>Makeover</h2>
+            <div class="makeover-divider"></div>
+            <div class="countdown-grid makeover-grid" id="countdown-makeover">
+                <div class="countdown-unit makeover-unit">
+                    <span class="countdown-number makeover-number" id="mk-days">0</span>
+                    <span class="countdown-unit-label makeover-label">Days</span>
+                </div>
+                <div class="countdown-separator makeover-sep">:</div>
+                <div class="countdown-unit makeover-unit">
+                    <span class="countdown-number makeover-number" id="mk-hours">0</span>
+                    <span class="countdown-unit-label makeover-label">Hours</span>
+                </div>
+                <div class="countdown-separator makeover-sep">:</div>
+                <div class="countdown-unit makeover-unit">
+                    <span class="countdown-number makeover-number" id="mk-mins">0</span>
+                    <span class="countdown-unit-label makeover-label">Minutes</span>
+                </div>
+                <div class="countdown-separator makeover-sep">:</div>
+                <div class="countdown-unit makeover-unit">
+                    <span class="countdown-number makeover-number" id="mk-secs">0</span>
+                    <span class="countdown-unit-label makeover-label">Seconds</span>
+                </div>
+            </div>
+            <div class="makeover-date">April 11, 2026 &middot; 11:30 AM</div>
+            <div class="makeover-tagline">A new chapter begins</div>
         </div>
     </section>
 

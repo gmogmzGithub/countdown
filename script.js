@@ -6,6 +6,9 @@ const homeTargetDate = new Date('2027-12-17T15:00:00-06:00');
 // CR-V 2028: November 1, 2028 at 12:00 PM CST (UTC-6)
 const crvTargetDate = new Date('2028-11-01T12:00:00-06:00');
 
+// Mommy Makeover: April 11, 2026 at 11:30 AM CST (UTC-6)
+const makeoverTargetDate = new Date('2026-04-11T11:30:00-06:00');
+
 // ─── Utilities ───
 
 function pluralize(value, singular, plural) {
@@ -98,6 +101,55 @@ function updateCrvCountdown() {
     }
 }
 
+// ─── Mommy Makeover Countdown ───
+
+function updateMakeoverCountdown() {
+    const now = new Date();
+    const diff = makeoverTargetDate - now;
+
+    const ids = ['mk-days', 'mk-hours', 'mk-mins', 'mk-secs'];
+
+    if (diff <= 0) {
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '00';
+        });
+        return;
+    }
+
+    const sec = 1000;
+    const min = sec * 60;
+    const hour = min * 60;
+    const day = hour * 24;
+
+    const days = Math.floor(diff / day);
+    const hours = Math.floor((diff % day) / hour);
+    const mins = Math.floor((diff % hour) / min);
+    const secs = Math.floor((diff % min) / sec);
+
+    const values = { 'mk-days': days, 'mk-hours': hours, 'mk-mins': mins, 'mk-secs': secs };
+
+    for (const [id, value] of Object.entries(values)) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = String(value).padStart(2, '0');
+    }
+
+    const labels = {
+        'mk-days': pluralize(days, 'Day', 'Days'),
+        'mk-hours': pluralize(hours, 'Hour', 'Hours'),
+        'mk-mins': pluralize(mins, 'Minute', 'Minutes'),
+        'mk-secs': pluralize(secs, 'Second', 'Seconds'),
+    };
+
+    for (const [id, label] of Object.entries(labels)) {
+        const el = document.getElementById(id);
+        if (el) {
+            const labelEl = el.parentElement?.querySelector('.countdown-unit-label');
+            if (labelEl) labelEl.textContent = label;
+        }
+    }
+}
+
 // ─── Tab Navigation ───
 
 function initTabs() {
@@ -154,6 +206,8 @@ function initTabs() {
 initTabs();
 updateHomeCountdown();
 updateCrvCountdown();
+updateMakeoverCountdown();
 
 setInterval(updateHomeCountdown, 1000);
 setInterval(updateCrvCountdown, 1000);
+setInterval(updateMakeoverCountdown, 1000);
