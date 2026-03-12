@@ -6,7 +6,7 @@
     <title>Countdown</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Permanent+Marker&family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,6 +23,10 @@
         <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-makeover" id="tab-makeover" data-tab="makeover">
             <span class="tab-icon">&#10047;</span>
             <span class="tab-label">Makeover</span>
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-birthday" id="tab-birthday" data-tab="birthday">
+            <span class="tab-icon">&#127754;</span>
+            <span class="tab-label">Birthday</span>
         </button>
     </nav>
 
@@ -111,6 +115,57 @@
             </div>
             <div class="makeover-date">April 11, 2026 &middot; 11:30 AM</div>
             <div class="makeover-tagline">A new chapter begins</div>
+        </div>
+    </section>
+
+    <!-- Panel: Birthday Beach Trip -->
+    <section class="panel" id="panel-birthday" role="tabpanel" aria-labelledby="tab-birthday" hidden>
+        <div class="overlay overlay-birthday"></div>
+        <div class="birthday-waves">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+        </div>
+        <div class="birthday-bubbles">
+            <div class="bubble bubble-1"></div>
+            <div class="bubble bubble-2"></div>
+            <div class="bubble bubble-3"></div>
+            <div class="bubble bubble-4"></div>
+            <div class="bubble bubble-5"></div>
+            <div class="bubble bubble-6"></div>
+        </div>
+        <div class="countdown-container birthday-container">
+            <div class="birthday-badge">&#127796; Beach Trip &#127796;</div>
+            <h2 class="birthday-title">Happy<br>Birthday</h2>
+            <div class="birthday-subtitle">Motherfucker</div>
+            <div class="birthday-divider">
+                <span class="divider-shell">&#127774;</span>
+                <span class="divider-line"></span>
+                <span class="divider-shell">&#127774;</span>
+            </div>
+            <div class="countdown-grid birthday-grid" id="countdown-birthday">
+                <div class="countdown-unit birthday-unit">
+                    <span class="countdown-number birthday-number" id="bd-days">0</span>
+                    <span class="countdown-unit-label birthday-label">Days</span>
+                </div>
+                <div class="countdown-separator birthday-sep">:</div>
+                <div class="countdown-unit birthday-unit">
+                    <span class="countdown-number birthday-number" id="bd-hours">0</span>
+                    <span class="countdown-unit-label birthday-label">Hours</span>
+                </div>
+                <div class="countdown-separator birthday-sep">:</div>
+                <div class="countdown-unit birthday-unit">
+                    <span class="countdown-number birthday-number" id="bd-mins">0</span>
+                    <span class="countdown-unit-label birthday-label">Minutes</span>
+                </div>
+                <div class="countdown-separator birthday-sep">:</div>
+                <div class="countdown-unit birthday-unit">
+                    <span class="countdown-number birthday-number" id="bd-secs">0</span>
+                    <span class="countdown-unit-label birthday-label">Seconds</span>
+                </div>
+            </div>
+            <div class="birthday-date">June 4, 2026 &middot; 4:00 AM</div>
+            <div class="birthday-tagline">&#127940; Sun, sand & bad decisions &#127940;</div>
         </div>
     </section>
 
