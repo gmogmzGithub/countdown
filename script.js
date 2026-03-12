@@ -63,39 +63,58 @@ function updateCountdown(prefix, targetDate) {
     const secs = Math.floor((diff % MIN) / SEC);
 
     let v1, v2, v3, l1, l2, l3;
+    let showThird = false;
 
     if (years > 0) {
         v1 = years;  l1 = pluralize(years, 'Year', 'Years');
         v2 = months; l2 = pluralize(months, 'Month', 'Months');
         v3 = daysAfterMonths; l3 = pluralize(daysAfterMonths, 'Day', 'Days');
+        showThird = true;
     } else if (totalMonths > 0) {
         v1 = totalMonths; l1 = pluralize(totalMonths, 'Month', 'Months');
         v2 = daysAfterTotalMonths; l2 = pluralize(daysAfterTotalMonths, 'Day', 'Days');
-        v3 = hours; l3 = pluralize(hours, 'Hour', 'Hours');
     } else if (totalDays > 0) {
         v1 = totalDays; l1 = pluralize(totalDays, 'Day', 'Days');
         v2 = hours; l2 = pluralize(hours, 'Hour', 'Hours');
-        v3 = mins; l3 = pluralize(mins, 'Minute', 'Minutes');
     } else if (hours > 0) {
         v1 = hours; l1 = pluralize(hours, 'Hour', 'Hours');
         v2 = mins; l2 = pluralize(mins, 'Minute', 'Minutes');
-        v3 = secs; l3 = pluralize(secs, 'Second', 'Seconds');
     } else if (mins > 0) {
         v1 = mins; l1 = pluralize(mins, 'Minute', 'Minutes');
         v2 = secs; l2 = pluralize(secs, 'Second', 'Seconds');
-        v3 = 0; l3 = '';
     } else {
         v1 = secs; l1 = pluralize(secs, 'Second', 'Seconds');
-        v2 = 0; l2 = '';
-        v3 = 0; l3 = '';
+        v2 = null;
     }
 
     el1.textContent = String(v1).padStart(2, '0');
-    el2.textContent = String(v2).padStart(2, '0');
-    el3.textContent = String(v3).padStart(2, '0');
     if (lbl1) lbl1.textContent = l1;
-    if (lbl2) lbl2.textContent = l2;
-    if (lbl3) lbl3.textContent = l3;
+
+    // Show/hide slot 2
+    const unit2 = el2.closest('.countdown-unit');
+    const sep1 = unit2?.previousElementSibling;
+    if (v2 != null) {
+        el2.textContent = String(v2).padStart(2, '0');
+        if (lbl2) lbl2.textContent = l2;
+        if (unit2) unit2.style.display = '';
+        if (sep1) sep1.style.display = '';
+    } else {
+        if (unit2) unit2.style.display = 'none';
+        if (sep1) sep1.style.display = 'none';
+    }
+
+    // Show/hide slot 3 + its separator
+    const unit3 = el3.closest('.countdown-unit');
+    const sep2 = unit3?.previousElementSibling;
+    if (showThird) {
+        el3.textContent = String(v3).padStart(2, '0');
+        if (lbl3) lbl3.textContent = l3;
+        if (unit3) unit3.style.display = '';
+        if (sep2) sep2.style.display = '';
+    } else {
+        if (unit3) unit3.style.display = 'none';
+        if (sep2) sep2.style.display = 'none';
+    }
 }
 
 // ─── Tab Navigation ───
