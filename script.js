@@ -1,9 +1,9 @@
 // ─── Target Dates ───
 
-// Home: December 17, 2027 at 3:00 PM CST (UTC-6)
+// Home / Apartment: December 17, 2027 at 3:00 PM CST (UTC-6)
 const homeTargetDate = new Date('2027-12-17T15:00:00-06:00');
 
-// CR-V 2028: November 1, 2028 at 12:00 PM CST (UTC-6)
+// New Car 2028: November 1, 2028 at 12:00 PM CST (UTC-6)
 const crvTargetDate = new Date('2028-11-01T12:00:00-06:00');
 
 // Mommy Makeover: April 11, 2026 at 11:30 AM CST (UTC-6)
@@ -18,43 +18,56 @@ function pluralize(value, singular, plural) {
     return value === 1 ? singular : plural;
 }
 
-// ─── Home Countdown ───
+// ─── Home / Apartment Countdown ───
 
-function calculateHomeCountdown() {
+function updateHomeCountdown() {
     const now = new Date();
     const diff = homeTargetDate - now;
 
+    const ids = ['hm-days', 'hm-hours', 'hm-mins', 'hm-secs'];
+
     if (diff <= 0) {
-        return "Time's Up!";
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = '00';
+        });
+        return;
     }
 
-    const day = 1000 * 60 * 60 * 24;
-    const totalDays = Math.floor(diff / day);
-    const years = Math.floor(totalDays / 365.25);
-    let remainingDays = Math.floor(totalDays - (years * 365.25));
-    const months = Math.floor(remainingDays / 30.44);
-    const days = Math.floor(remainingDays - (months * 30.44));
+    const sec = 1000;
+    const min = sec * 60;
+    const hour = min * 60;
+    const day = hour * 24;
 
-    if (years > 0) {
-        return `${years} ${pluralize(years, 'year', 'years')}, ${months} ${pluralize(months, 'month', 'months')} and ${days} ${pluralize(days, 'day', 'days')}`;
+    const days = Math.floor(diff / day);
+    const hours = Math.floor((diff % day) / hour);
+    const mins = Math.floor((diff % hour) / min);
+    const secs = Math.floor((diff % min) / sec);
+
+    const values = { 'hm-days': days, 'hm-hours': hours, 'hm-mins': mins, 'hm-secs': secs };
+
+    for (const [id, value] of Object.entries(values)) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = String(value).padStart(2, '0');
     }
 
-    const totalMonths = Math.floor(totalDays / 30.44);
-    const daysAfterMonths = Math.floor(totalDays - (totalMonths * 30.44));
+    const labels = {
+        'hm-days': pluralize(days, 'Day', 'Days'),
+        'hm-hours': pluralize(hours, 'Hour', 'Hours'),
+        'hm-mins': pluralize(mins, 'Minute', 'Minutes'),
+        'hm-secs': pluralize(secs, 'Second', 'Seconds'),
+    };
 
-    if (totalMonths > 0) {
-        return `${totalMonths} ${pluralize(totalMonths, 'month', 'months')}, ${daysAfterMonths} ${pluralize(daysAfterMonths, 'day', 'days')}`;
+    for (const [id, label] of Object.entries(labels)) {
+        const el = document.getElementById(id);
+        if (el) {
+            const labelEl = el.parentElement?.querySelector('.countdown-unit-label');
+            if (labelEl) labelEl.textContent = label;
+        }
     }
-
-    return `${totalDays} ${pluralize(totalDays, 'day', 'days')}`;
 }
 
-function updateHomeCountdown() {
-    const el = document.getElementById('countdown-home');
-    if (el) el.textContent = calculateHomeCountdown();
-}
-
-// ─── CR-V 2028 Countdown ───
+// ─── New Car 2028 Countdown ───
 
 function updateCrvCountdown() {
     const now = new Date();

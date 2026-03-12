@@ -13,12 +13,12 @@
     <!-- Tab Navigation -->
     <nav class="tab-nav" role="tablist" aria-label="Countdown tabs">
         <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-home" id="tab-home" data-tab="home">
-            <span class="tab-icon">&#9737;</span>
+            <span class="tab-icon">&#127968;</span>
             <span class="tab-label">Home</span>
         </button>
         <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-crv" id="tab-crv" data-tab="crv">
-            <span class="tab-icon">&#9881;</span>
-            <span class="tab-label">Acura RDX</span>
+            <span class="tab-icon">&#128663;</span>
+            <span class="tab-label">New Ride</span>
         </button>
         <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-makeover" id="tab-makeover" data-tab="makeover">
             <span class="tab-icon">&#10047;</span>
@@ -30,18 +30,53 @@
         </button>
     </nav>
 
-    <!-- Panel: Home Countdown -->
+    <!-- Panel: Home / Apartment Countdown -->
     <section class="panel active" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
         <div class="overlay overlay-home"></div>
-        <div class="countdown-container">
-            <h2 class="home-title">Espacio Metrópoli</h2>
-            <div class="countdown-label">Counting down to</div>
-            <div id="countdown-home" class="countdown-text">Loading...</div>
-            <div class="countdown-date">December 17, 2027</div>
+        <div class="home-city-lights">
+            <div class="city-light city-light-1"></div>
+            <div class="city-light city-light-2"></div>
+            <div class="city-light city-light-3"></div>
+            <div class="city-light city-light-4"></div>
+            <div class="city-light city-light-5"></div>
+            <div class="city-light city-light-6"></div>
+            <div class="city-light city-light-7"></div>
+        </div>
+        <div class="countdown-container home-container">
+            <div class="home-badge">&#128273; Our New Home &#128273;</div>
+            <h2 class="home-title">Espacio<br>Metr&oacute;poli</h2>
+            <div class="home-divider">
+                <span class="home-divider-icon">&#10022;</span>
+                <span class="home-divider-line"></span>
+                <span class="home-divider-icon">&#10022;</span>
+            </div>
+            <div class="countdown-grid home-grid" id="countdown-home-grid">
+                <div class="countdown-unit home-unit">
+                    <span class="countdown-number home-number" id="hm-days">0</span>
+                    <span class="countdown-unit-label home-label">Days</span>
+                </div>
+                <div class="countdown-separator home-sep">:</div>
+                <div class="countdown-unit home-unit">
+                    <span class="countdown-number home-number" id="hm-hours">0</span>
+                    <span class="countdown-unit-label home-label">Hours</span>
+                </div>
+                <div class="countdown-separator home-sep">:</div>
+                <div class="countdown-unit home-unit">
+                    <span class="countdown-number home-number" id="hm-mins">0</span>
+                    <span class="countdown-unit-label home-label">Minutes</span>
+                </div>
+                <div class="countdown-separator home-sep">:</div>
+                <div class="countdown-unit home-unit">
+                    <span class="countdown-number home-number" id="hm-secs">0</span>
+                    <span class="countdown-unit-label home-label">Seconds</span>
+                </div>
+            </div>
+            <div class="home-date">December 17, 2027 &middot; 3:00 PM</div>
+            <div class="home-tagline">Finally home, at last</div>
         </div>
     </section>
 
-    <!-- Panel: Honda CR-V 2028 -->
+    <!-- Panel: New Car 2028 -->
     <section class="panel" id="panel-crv" role="tabpanel" aria-labelledby="tab-crv" hidden>
         <div class="overlay overlay-crv"></div>
         <div class="crv-bg-shapes">
@@ -49,32 +84,43 @@
             <div class="shape shape-2"></div>
             <div class="shape shape-3"></div>
         </div>
+        <div class="crv-speed-lines">
+            <div class="speed-line speed-line-1"></div>
+            <div class="speed-line speed-line-2"></div>
+            <div class="speed-line speed-line-3"></div>
+            <div class="speed-line speed-line-4"></div>
+            <div class="speed-line speed-line-5"></div>
+        </div>
         <div class="countdown-container crv-container">
-            <h2 class="crv-title">Acura RDX - 2028</h2>
-            <div class="crv-subtitle">New Emotions</div>
-            <div class="countdown-grid" id="countdown-crv">
-                <div class="countdown-unit">
-                    <span class="countdown-number" id="crv-years">0</span>
-                    <span class="countdown-unit-label">Years</span>
+            <div class="crv-badge">&#127942; New Whip Loading &#127942;</div>
+            <h2 class="crv-title">New<br>Ride</h2>
+            <div class="crv-subtitle">2028</div>
+            <div class="crv-divider">
+                <span class="crv-divider-line"></span>
+            </div>
+            <div class="countdown-grid crv-grid" id="countdown-crv">
+                <div class="countdown-unit crv-unit">
+                    <span class="countdown-number crv-number" id="crv-years">0</span>
+                    <span class="countdown-unit-label crv-label">Years</span>
                 </div>
-                <div class="countdown-separator">:</div>
-                <div class="countdown-unit">
-                    <span class="countdown-number" id="crv-months">0</span>
-                    <span class="countdown-unit-label">Months</span>
+                <div class="countdown-separator crv-sep">:</div>
+                <div class="countdown-unit crv-unit">
+                    <span class="countdown-number crv-number" id="crv-months">0</span>
+                    <span class="countdown-unit-label crv-label">Months</span>
                 </div>
-                <div class="countdown-separator">:</div>
-                <div class="countdown-unit">
-                    <span class="countdown-number" id="crv-days">0</span>
-                    <span class="countdown-unit-label">Days</span>
+                <div class="countdown-separator crv-sep">:</div>
+                <div class="countdown-unit crv-unit">
+                    <span class="countdown-number crv-number" id="crv-days">0</span>
+                    <span class="countdown-unit-label crv-label">Days</span>
                 </div>
-                <div class="countdown-separator">:</div>
-                <div class="countdown-unit">
-                    <span class="countdown-number" id="crv-hours">0</span>
-                    <span class="countdown-unit-label">Hours</span>
+                <div class="countdown-separator crv-sep">:</div>
+                <div class="countdown-unit crv-unit">
+                    <span class="countdown-number crv-number" id="crv-hours">0</span>
+                    <span class="countdown-unit-label crv-label">Hours</span>
                 </div>
             </div>
             <div class="crv-target-date">November 2028</div>
-            <div class="crv-tagline">The future of adventure awaits</div>
+            <div class="crv-tagline">Something fast, something new</div>
         </div>
     </section>
 
