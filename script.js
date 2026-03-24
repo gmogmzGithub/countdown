@@ -6,8 +6,8 @@ const homeTargetDate = new Date('2027-12-17T15:00:00-06:00');
 // New Car 2028: November 1, 2028 at 12:00 PM
 const crvTargetDate = new Date('2028-11-01T12:00:00-06:00');
 
-// Mommy Makeover: April 11, 2026 at 11:30 AM
-const makeoverTargetDate = new Date('2026-04-11T11:30:00-06:00');
+// Mommy Makeover: August 8, 2026 at 11:30 AM
+const makeoverTargetDate = new Date('2026-08-08T11:30:00-06:00');
 
 // Birthday Beach Trip: June 4, 2026 at 4:00 AM
 const birthdayTargetDate = new Date('2026-06-04T04:00:00-06:00');
