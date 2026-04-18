@@ -172,6 +172,12 @@ function updateCitrusPayments() {
             fill: document.getElementById('ct-progress-fill'),
             next: document.getElementById('ct-next'),
         };
+        document.getElementById('ct-total').textContent = CITRUS_TOTAL_PAYMENTS;
+        const initFmt = MXN_FORMATTER.format(CITRUS_INITIAL_AMOUNT);
+        const moFmt = MXN_FORMATTER.format(CITRUS_MONTHLY_AMOUNT);
+        const totalFmt = MXN_FORMATTER.format(CITRUS_TOTAL_AMOUNT);
+        document.getElementById('ct-tagline').textContent =
+            `Aporte ${initFmt} + ${CITRUS_MONTHLY_PAYMENTS} × ${moFmt} MXN · Total ${totalFmt}`;
     }
 
     const paidAmount = initialPaid * CITRUS_INITIAL_AMOUNT + monthlyPaid * CITRUS_MONTHLY_AMOUNT;

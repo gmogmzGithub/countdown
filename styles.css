@@ -1346,17 +1346,6 @@ body {
     50% { background-position: 100% 50%; }
 }
 
-.citrus-subtitle {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 400;
-    color: rgba(220, 245, 160, 0.75);
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    font-style: italic;
-}
-
 .citrus-divider {
     display: flex;
     align-items: center;
