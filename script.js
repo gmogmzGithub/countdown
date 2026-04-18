@@ -140,19 +140,12 @@ const MXN_FORMATTER = new Intl.NumberFormat('es-MX', {
     maximumFractionDigits: 0,
 });
 
-const CITRUS_DATE_FORMATTER = new Intl.DateTimeFormat('es-MX', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-});
-
-const CITRUS_MONTHLY_DATES = Array.from({ length: CITRUS_MONTHLY_PAYMENTS }, (_, i) => {
+const CITRUS_MONTHLY_TS = Array.from({ length: CITRUS_MONTHLY_PAYMENTS }, (_, i) => {
     const totalMonths = (CITRUS_MONTHLY_START_MONTH - 1) + i;
     const year = CITRUS_MONTHLY_START_YEAR + Math.floor(totalMonths / 12);
     const month = String((totalMonths % 12) + 1).padStart(2, '0');
-    return new Date(`${year}-${month}-01T00:00:00-06:00`);
+    return new Date(`${year}-${month}-01T00:00:00-06:00`).getTime();
 });
-const CITRUS_MONTHLY_TS = CITRUS_MONTHLY_DATES.map(d => d.getTime());
 
 let citrusDom = null;
 let citrusLastPaid = -1;
@@ -173,7 +166,6 @@ function updateCitrusPayments() {
             paidAmount: document.getElementById('ct-paid-amount'),
             remainingAmount: document.getElementById('ct-remaining-amount'),
             fill: document.getElementById('ct-progress-fill'),
-            next: document.getElementById('ct-next'),
         };
         document.getElementById('ct-total').textContent = CITRUS_TOTAL_PAYMENTS;
         const initFmt = MXN_FORMATTER.format(CITRUS_INITIAL_AMOUNT);
@@ -192,15 +184,6 @@ function updateCitrusPayments() {
     citrusDom.paidAmount.textContent = MXN_FORMATTER.format(paidAmount);
     citrusDom.remainingAmount.textContent = MXN_FORMATTER.format(remainingAmount);
     citrusDom.fill.style.width = `${(paidAmount / CITRUS_TOTAL_AMOUNT) * 100}%`;
-
-    if (paid >= CITRUS_TOTAL_PAYMENTS) {
-        citrusDom.next.textContent = 'Plan completado';
-    } else if (!initialPaid) {
-        citrusDom.next.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_INITIAL_AMOUNT)} · aporte inicial`;
-    } else {
-        const formatted = CITRUS_DATE_FORMATTER.format(CITRUS_MONTHLY_DATES[monthlyPaid]);
-        citrusDom.next.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_MONTHLY_AMOUNT)} · ${formatted}`;
-    }
 }
 
 // ─── Tab Navigation ───

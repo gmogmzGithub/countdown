@@ -1512,15 +1512,6 @@ body {
 .citrus-stat-remaining { color: #fff; }
 .citrus-stat-due { color: #ffd76b; }
 
-.citrus-next {
-    font-size: 0.72rem;
-    font-weight: 400;
-    color: rgba(220, 245, 160, 0.6);
-    letter-spacing: 0.05em;
-    text-align: center;
-    padding-top: 10px;
-    border-top: 1px solid rgba(200, 240, 130, 0.12);
-}
 
 .citrus-tagline {
     font-size: 0.75rem;
