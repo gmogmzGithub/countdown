@@ -28,6 +28,10 @@
             <span class="tab-icon">&#127754;</span>
             <span class="tab-label">Birthday</span>
         </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-citrus" id="tab-citrus" data-tab="citrus">
+            <span class="tab-icon">&#127819;</span>
+            <span class="tab-label">Citrus</span>
+        </button>
     </nav>
 
     <!-- Panel: Home / Apartment Countdown -->
@@ -192,6 +196,77 @@
             </div>
             <div class="birthday-date">June 4, 2026 &middot; 4:00 AM</div>
             <div class="birthday-tagline">&#127940; Sun, sand & bad decisions &#127940;</div>
+        </div>
+    </section>
+
+    <!-- Panel: Citrus Patrimonial Investment -->
+    <section class="panel" id="panel-citrus" role="tabpanel" aria-labelledby="tab-citrus" hidden>
+        <div class="overlay overlay-citrus"></div>
+        <div class="citrus-leaves">
+            <div class="leaf leaf-1"></div>
+            <div class="leaf leaf-2"></div>
+            <div class="leaf leaf-3"></div>
+            <div class="leaf leaf-4"></div>
+            <div class="leaf leaf-5"></div>
+            <div class="leaf leaf-6"></div>
+        </div>
+        <div class="countdown-container citrus-container">
+            <div class="citrus-badge">&#127819; Citrus Patrimonial &#127819;</div>
+            <h2 class="citrus-title">Lemon<br>Legacy</h2>
+            <div class="citrus-subtitle">El dinero s&iacute; crece</div>
+            <div class="citrus-divider">
+                <span class="citrus-divider-line"></span>
+            </div>
+            <div class="countdown-grid citrus-grid" id="countdown-citrus">
+                <div class="countdown-unit citrus-unit">
+                    <span class="countdown-number citrus-number" id="ct-1">0</span>
+                    <span class="countdown-unit-label citrus-label" id="ct-1-label">Years</span>
+                </div>
+                <div class="countdown-separator citrus-sep">:</div>
+                <div class="countdown-unit citrus-unit">
+                    <span class="countdown-number citrus-number" id="ct-2">0</span>
+                    <span class="countdown-unit-label citrus-label" id="ct-2-label">Months</span>
+                </div>
+                <div class="countdown-separator citrus-sep">:</div>
+                <div class="countdown-unit citrus-unit">
+                    <span class="countdown-number citrus-number" id="ct-3">0</span>
+                    <span class="countdown-unit-label citrus-label" id="ct-3-label">Days</span>
+                </div>
+            </div>
+            <div class="citrus-date">Entrega &middot; Febrero 2029</div>
+
+            <div class="citrus-payments">
+                <div class="citrus-payments-header">
+                    <span class="citrus-payments-title">Mensualidades</span>
+                    <span class="citrus-payments-count">
+                        <span id="ct-paid-count">0</span>
+                        <span class="citrus-payments-divider">/</span>
+                        <span class="citrus-payments-total">36</span>
+                    </span>
+                </div>
+                <div class="citrus-progress-bar">
+                    <div class="citrus-progress-fill" id="ct-progress-fill"></div>
+                </div>
+                <div class="citrus-stats">
+                    <div class="citrus-stat">
+                        <span class="citrus-stat-label">Pagado</span>
+                        <span class="citrus-stat-value citrus-stat-paid" id="ct-paid-amount">$0</span>
+                    </div>
+                    <div class="citrus-stat-sep"></div>
+                    <div class="citrus-stat">
+                        <span class="citrus-stat-label">Restan</span>
+                        <span class="citrus-stat-value citrus-stat-remaining" id="ct-remaining-count">0</span>
+                    </div>
+                    <div class="citrus-stat-sep"></div>
+                    <div class="citrus-stat">
+                        <span class="citrus-stat-label">Por pagar</span>
+                        <span class="citrus-stat-value citrus-stat-due" id="ct-remaining-amount">$0</span>
+                    </div>
+                </div>
+                <div class="citrus-next" id="ct-next"></div>
+            </div>
+
+            <div class="citrus-tagline">36 &times; $3,520 MXN &middot; Mar 2026 &rarr; Feb 2029</div>
         </div>
     </section>
 

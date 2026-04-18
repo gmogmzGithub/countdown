@@ -1242,6 +1242,304 @@ body {
     font-style: italic;
 }
 
+/* ─── Panel: Citrus Patrimonial ─── */
+
+#panel-citrus {
+    background-image: url('https://scontent-dfw5-2.xx.fbcdn.net/v/t39.30808-6/438892072_306904065780029_771951577272868015_n.png?_nc_cat=107&ccb=1-7&_nc_sid=2a1932&_nc_ohc=mXxPePddqUIQ7kNvwGOiShg&_nc_oc=AdqTsM846osrYu3GxV-8cXYDZPh5N6AHp4vdQC4rvUW0PvUU5cUndTyg5EhiJgDadgk&_nc_zt=23&_nc_ht=scontent-dfw5-2.xx&_nc_gid=Brqo9fQIjcXjCe3BRWlXAg&_nc_ss=7a389&oh=00_Af2o7WaSITy04c1k7HFvWWwnqHcNqj4nfL1VPC-2nXV-GQ&oe=69E9A6F6');
+    background-color: #0d1a0f;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.overlay-citrus {
+    background: linear-gradient(
+        170deg,
+        rgba(8, 25, 15, 0.72) 0%,
+        rgba(15, 40, 22, 0.62) 40%,
+        rgba(30, 60, 30, 0.55) 70%,
+        rgba(60, 80, 25, 0.5) 100%
+    );
+}
+
+.citrus-leaves {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.leaf {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200, 240, 140, 0.7), rgba(150, 210, 90, 0) 70%);
+    animation: citrusDrift 9s ease-in-out infinite;
+}
+
+.leaf-1 { width: 14px; height: 14px; top: 12%; left: 16%; animation-delay: 0s; animation-duration: 7s; }
+.leaf-2 { width: 8px;  height: 8px;  top: 28%; right: 18%; animation-delay: 1.4s; animation-duration: 9s; }
+.leaf-3 { width: 11px; height: 11px; top: 55%; left: 10%; animation-delay: 3s; animation-duration: 8s; }
+.leaf-4 { width: 6px;  height: 6px;  top: 70%; right: 22%; animation-delay: 0.6s; animation-duration: 10s; }
+.leaf-5 { width: 13px; height: 13px; top: 38%; left: 60%; animation-delay: 2.2s; animation-duration: 7.5s; }
+.leaf-6 { width: 9px;  height: 9px;  top: 80%; left: 40%; animation-delay: 4s; animation-duration: 8.5s; }
+
+@keyframes citrusDrift {
+    0%, 100% { opacity: 0.25; transform: translateY(0) scale(0.85); }
+    30% { opacity: 1; transform: translateY(-16px) scale(1.1); }
+    60% { opacity: 0.6; transform: translateY(-32px) scale(0.95); }
+    80% { opacity: 0.85; transform: translateY(-12px) scale(1.15); }
+}
+
+.citrus-container {
+    gap: 0;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.citrus-badge {
+    font-family: var(--font-primary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(220, 245, 160, 0.95);
+    padding: 8px 22px;
+    border: 1px solid rgba(200, 240, 130, 0.35);
+    border-radius: 50px;
+    margin-bottom: 18px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(140, 200, 80, 0.12);
+    box-shadow: 0 0 18px rgba(180, 230, 100, 0.1);
+}
+
+.citrus-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 11vw, 6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    margin-bottom: 6px;
+    text-align: center;
+    color: transparent;
+    background: linear-gradient(
+        135deg,
+        #fff 0%,
+        #f4ff9a 25%,
+        #c8e66a 50%,
+        #a5d84a 70%,
+        #fff 100%
+    );
+    background-size: 250% 250%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: citrusShimmer 6s ease-in-out infinite;
+    filter: drop-shadow(0 3px 14px rgba(180, 230, 100, 0.25));
+}
+
+@keyframes citrusShimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.citrus-subtitle {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: rgba(220, 245, 160, 0.75);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-style: italic;
+}
+
+.citrus-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.citrus-divider-line {
+    width: 90px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200, 240, 130, 0.5), transparent);
+}
+
+.citrus-grid {
+    margin-bottom: 20px;
+}
+
+.citrus-unit {
+    background: rgba(15, 35, 20, 0.5);
+    border: 1px solid rgba(200, 240, 130, 0.18);
+    border-radius: 18px;
+    min-width: 68px;
+    padding: 14px 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.citrus-unit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(180, 230, 100, 0.2);
+    border-color: rgba(200, 240, 130, 0.4);
+}
+
+.citrus-number {
+    background: linear-gradient(180deg, #fff 25%, rgba(200, 240, 130, 0.9) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.citrus-sep {
+    color: rgba(200, 240, 130, 0.3);
+}
+
+.citrus-label {
+    color: rgba(220, 245, 160, 0.55);
+}
+
+.citrus-date {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(220, 245, 160, 0.75);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+/* Payment tracker */
+.citrus-payments {
+    width: min(380px, 88vw);
+    padding: 16px 18px;
+    background: rgba(10, 25, 15, 0.55);
+    border: 1px solid rgba(200, 240, 130, 0.18);
+    border-radius: 18px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.3);
+    margin-bottom: 14px;
+}
+
+.citrus-payments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.citrus-payments-title {
+    font-family: var(--font-primary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(220, 245, 160, 0.7);
+}
+
+.citrus-payments-count {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f4ff9a;
+    font-variant-numeric: tabular-nums;
+}
+
+.citrus-payments-divider {
+    color: rgba(200, 240, 130, 0.4);
+    margin: 0 3px;
+    font-weight: 300;
+}
+
+.citrus-payments-total {
+    color: rgba(220, 245, 160, 0.6);
+    font-weight: 400;
+}
+
+.citrus-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(200, 240, 130, 0.12);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.citrus-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #a5d84a 0%, #d4f070 60%, #f4ff9a 100%);
+    border-radius: 100px;
+    box-shadow: 0 0 12px rgba(200, 240, 130, 0.45);
+    transition: width 0.6s ease;
+}
+
+.citrus-stats {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.citrus-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    gap: 3px;
+}
+
+.citrus-stat-sep {
+    width: 1px;
+    background: rgba(200, 240, 130, 0.15);
+}
+
+.citrus-stat-label {
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(220, 245, 160, 0.55);
+}
+
+.citrus-stat-value {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+}
+
+.citrus-stat-paid { color: #d4f070; }
+.citrus-stat-remaining { color: #fff; }
+.citrus-stat-due { color: #ffd76b; }
+
+.citrus-next {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: rgba(220, 245, 160, 0.6);
+    letter-spacing: 0.05em;
+    text-align: center;
+    padding-top: 10px;
+    border-top: 1px solid rgba(200, 240, 130, 0.12);
+}
+
+.citrus-tagline {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--white-50);
+    letter-spacing: 0.08em;
+    font-style: italic;
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 768px) {
@@ -1333,6 +1631,28 @@ body {
     .birthday-subtitle {
         font-size: clamp(1.2rem, 5vw, 2rem);
     }
+
+    .citrus-unit {
+        min-width: 52px;
+        padding: 10px 8px;
+    }
+
+    .citrus-title {
+        font-size: clamp(2.2rem, 12vw, 4.5rem);
+    }
+
+    .citrus-grid {
+        gap: 4px;
+    }
+
+    .citrus-payments {
+        width: min(340px, 92vw);
+        padding: 14px 14px;
+    }
+
+    .citrus-stat-value {
+        font-size: 0.85rem;
+    }
 }
 
 /* ─── Accessibility: Reduced Motion ─── */
@@ -1350,14 +1670,16 @@ body {
     .wave,
     .bubble,
     .city-light,
-    .speed-line {
+    .speed-line,
+    .leaf {
         animation: none;
     }
 
     .home-title,
     .crv-title,
     .birthday-title,
-    .birthday-subtitle {
+    .birthday-subtitle,
+    .citrus-title {
         animation: none;
     }
 

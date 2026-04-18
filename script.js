@@ -12,6 +12,16 @@ const makeoverTargetDate = new Date('2026-08-08T11:30:00-06:00');
 // Birthday Beach Trip: June 4, 2026 at 4:00 AM
 const birthdayTargetDate = new Date('2026-06-04T04:00:00-06:00');
 
+// Citrus Patrimonial: projected delivery February 2029
+const citrusTargetDate = new Date('2029-02-01T00:00:00-06:00');
+
+// Citrus payment plan: 36 monthly installments of $3,520 MXN
+// First: March 1, 2026 · Last: February 1, 2029 · Due on the 1st of each month
+const CITRUS_PAYMENT_AMOUNT = 3520;
+const CITRUS_TOTAL_PAYMENTS = 36;
+const CITRUS_FIRST_PAYMENT_YEAR = 2026;
+const CITRUS_FIRST_PAYMENT_MONTH = 2; // March (0-indexed)
+
 // ─── Utilities ───
 
 function pluralize(value, singular, plural) {
@@ -117,6 +127,65 @@ function updateCountdown(prefix, targetDate) {
     }
 }
 
+// ─── Citrus Payment Tracker ───
+
+const MXN_FORMATTER = new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+});
+
+const SPANISH_MONTHS = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+];
+
+function citrusPaymentDate(index) {
+    return new Date(
+        CITRUS_FIRST_PAYMENT_YEAR,
+        CITRUS_FIRST_PAYMENT_MONTH + index,
+        1,
+        0, 0, 0, 0,
+    );
+}
+
+function updateCitrusPayments() {
+    const now = new Date();
+    let paid = 0;
+    for (let i = 0; i < CITRUS_TOTAL_PAYMENTS; i++) {
+        if (citrusPaymentDate(i) <= now) paid++;
+    }
+    const remaining = CITRUS_TOTAL_PAYMENTS - paid;
+    const paidAmount = paid * CITRUS_PAYMENT_AMOUNT;
+    const remainingAmount = remaining * CITRUS_PAYMENT_AMOUNT;
+    const percent = (paid / CITRUS_TOTAL_PAYMENTS) * 100;
+
+    const paidCountEl = document.getElementById('ct-paid-count');
+    const remainingCountEl = document.getElementById('ct-remaining-count');
+    const paidAmountEl = document.getElementById('ct-paid-amount');
+    const remainingAmountEl = document.getElementById('ct-remaining-amount');
+    const fillEl = document.getElementById('ct-progress-fill');
+    const nextEl = document.getElementById('ct-next');
+
+    if (paidCountEl) paidCountEl.textContent = paid;
+    if (remainingCountEl) remainingCountEl.textContent = remaining;
+    if (paidAmountEl) paidAmountEl.textContent = MXN_FORMATTER.format(paidAmount);
+    if (remainingAmountEl) remainingAmountEl.textContent = MXN_FORMATTER.format(remainingAmount);
+    if (fillEl) fillEl.style.width = `${percent}%`;
+
+    if (nextEl) {
+        if (paid >= CITRUS_TOTAL_PAYMENTS) {
+            nextEl.textContent = 'Plan completado';
+        } else {
+            const next = citrusPaymentDate(paid);
+            const monthName = SPANISH_MONTHS[next.getMonth()];
+            const year = next.getFullYear();
+            nextEl.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_PAYMENT_AMOUNT)} · 1 de ${monthName} ${year}`;
+        }
+    }
+}
+
 // ─── Tab Navigation ───
 
 function initTabs() {
@@ -172,6 +241,8 @@ function updateAll() {
     updateCountdown('crv', crvTargetDate);
     updateCountdown('mk', makeoverTargetDate);
     updateCountdown('bd', birthdayTargetDate);
+    updateCountdown('ct', citrusTargetDate);
+    updateCitrusPayments();
 }
 
 initTabs();
