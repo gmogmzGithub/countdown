@@ -12,12 +12,16 @@ const makeoverTargetDate = new Date('2026-08-08T11:30:00-06:00');
 // Birthday Beach Trip: June 4, 2026 at 4:00 AM
 const birthdayTargetDate = new Date('2026-06-04T04:00:00-06:00');
 
-const citrusTargetDate = new Date('2029-02-01T00:00:00-06:00');
+const citrusTargetDate = new Date('2029-02-24T00:00:00-06:00');
 
-const CITRUS_PAYMENT_AMOUNT = 3520;
-const CITRUS_TOTAL_PAYMENTS = 36;
-const CITRUS_FIRST_PAYMENT_YEAR = 2025;
-const CITRUS_FIRST_PAYMENT_MONTH = 2;
+const CITRUS_SIGNING_TS = new Date('2025-02-24T00:00:00-06:00').getTime();
+const CITRUS_INITIAL_AMOUNT = 72600;
+const CITRUS_MONTHLY_AMOUNT = 3520;
+const CITRUS_MONTHLY_PAYMENTS = 48;
+const CITRUS_TOTAL_PAYMENTS = 1 + CITRUS_MONTHLY_PAYMENTS;
+const CITRUS_TOTAL_AMOUNT = CITRUS_INITIAL_AMOUNT + CITRUS_MONTHLY_PAYMENTS * CITRUS_MONTHLY_AMOUNT;
+const CITRUS_MONTHLY_START_YEAR = 2025;
+const CITRUS_MONTHLY_START_MONTH = 3;
 
 // ─── Utilities ───
 
@@ -139,21 +143,23 @@ const CITRUS_DATE_FORMATTER = new Intl.DateTimeFormat('es-MX', {
     year: 'numeric',
 });
 
-const CITRUS_PAYMENT_DATES = Array.from({ length: CITRUS_TOTAL_PAYMENTS }, (_, i) => {
-    const totalMonths = (CITRUS_FIRST_PAYMENT_MONTH - 1) + i;
-    const year = CITRUS_FIRST_PAYMENT_YEAR + Math.floor(totalMonths / 12);
+const CITRUS_MONTHLY_DATES = Array.from({ length: CITRUS_MONTHLY_PAYMENTS }, (_, i) => {
+    const totalMonths = (CITRUS_MONTHLY_START_MONTH - 1) + i;
+    const year = CITRUS_MONTHLY_START_YEAR + Math.floor(totalMonths / 12);
     const month = String((totalMonths % 12) + 1).padStart(2, '0');
     return new Date(`${year}-${month}-01T00:00:00-06:00`);
 });
-const CITRUS_PAYMENT_TS = CITRUS_PAYMENT_DATES.map(d => d.getTime());
+const CITRUS_MONTHLY_TS = CITRUS_MONTHLY_DATES.map(d => d.getTime());
 
 let citrusDom = null;
 let citrusLastPaid = -1;
 
 function updateCitrusPayments() {
     const now = Date.now();
-    let paid = 0;
-    while (paid < CITRUS_TOTAL_PAYMENTS && CITRUS_PAYMENT_TS[paid] <= now) paid++;
+    const initialPaid = now >= CITRUS_SIGNING_TS ? 1 : 0;
+    let monthlyPaid = 0;
+    while (monthlyPaid < CITRUS_MONTHLY_PAYMENTS && CITRUS_MONTHLY_TS[monthlyPaid] <= now) monthlyPaid++;
+    const paid = initialPaid + monthlyPaid;
     if (paid === citrusLastPaid) return;
     citrusLastPaid = paid;
 
@@ -168,18 +174,23 @@ function updateCitrusPayments() {
         };
     }
 
+    const paidAmount = initialPaid * CITRUS_INITIAL_AMOUNT + monthlyPaid * CITRUS_MONTHLY_AMOUNT;
+    const remainingAmount = CITRUS_TOTAL_AMOUNT - paidAmount;
     const remaining = CITRUS_TOTAL_PAYMENTS - paid;
+
     citrusDom.paidCount.textContent = paid;
     citrusDom.remainingCount.textContent = remaining;
-    citrusDom.paidAmount.textContent = MXN_FORMATTER.format(paid * CITRUS_PAYMENT_AMOUNT);
-    citrusDom.remainingAmount.textContent = MXN_FORMATTER.format(remaining * CITRUS_PAYMENT_AMOUNT);
-    citrusDom.fill.style.width = `${(paid / CITRUS_TOTAL_PAYMENTS) * 100}%`;
+    citrusDom.paidAmount.textContent = MXN_FORMATTER.format(paidAmount);
+    citrusDom.remainingAmount.textContent = MXN_FORMATTER.format(remainingAmount);
+    citrusDom.fill.style.width = `${(paidAmount / CITRUS_TOTAL_AMOUNT) * 100}%`;
 
     if (paid >= CITRUS_TOTAL_PAYMENTS) {
         citrusDom.next.textContent = 'Plan completado';
+    } else if (!initialPaid) {
+        citrusDom.next.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_INITIAL_AMOUNT)} · aporte inicial`;
     } else {
-        const formatted = CITRUS_DATE_FORMATTER.format(CITRUS_PAYMENT_DATES[paid]);
-        citrusDom.next.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_PAYMENT_AMOUNT)} · ${formatted}`;
+        const formatted = CITRUS_DATE_FORMATTER.format(CITRUS_MONTHLY_DATES[monthlyPaid]);
+        citrusDom.next.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_MONTHLY_AMOUNT)} · ${formatted}`;
     }
 }
 
