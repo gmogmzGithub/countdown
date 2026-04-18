@@ -12,15 +12,12 @@ const makeoverTargetDate = new Date('2026-08-08T11:30:00-06:00');
 // Birthday Beach Trip: June 4, 2026 at 4:00 AM
 const birthdayTargetDate = new Date('2026-06-04T04:00:00-06:00');
 
-// Citrus Patrimonial: projected delivery February 2029
 const citrusTargetDate = new Date('2029-02-01T00:00:00-06:00');
 
-// Citrus payment plan: 36 monthly installments of $3,520 MXN
-// First: March 1, 2026 · Last: February 1, 2029 · Due on the 1st of each month
 const CITRUS_PAYMENT_AMOUNT = 3520;
 const CITRUS_TOTAL_PAYMENTS = 36;
 const CITRUS_FIRST_PAYMENT_YEAR = 2026;
-const CITRUS_FIRST_PAYMENT_MONTH = 2; // March (0-indexed)
+const CITRUS_FIRST_PAYMENT_MONTH = 3;
 
 // ─── Utilities ───
 
@@ -136,53 +133,53 @@ const MXN_FORMATTER = new Intl.NumberFormat('es-MX', {
     maximumFractionDigits: 0,
 });
 
-const SPANISH_MONTHS = [
-    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
-];
+const CITRUS_DATE_FORMATTER = new Intl.DateTimeFormat('es-MX', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+});
 
-function citrusPaymentDate(index) {
-    return new Date(
-        CITRUS_FIRST_PAYMENT_YEAR,
-        CITRUS_FIRST_PAYMENT_MONTH + index,
-        1,
-        0, 0, 0, 0,
-    );
-}
+const CITRUS_PAYMENT_DATES = Array.from({ length: CITRUS_TOTAL_PAYMENTS }, (_, i) => {
+    const totalMonths = (CITRUS_FIRST_PAYMENT_MONTH - 1) + i;
+    const year = CITRUS_FIRST_PAYMENT_YEAR + Math.floor(totalMonths / 12);
+    const month = String((totalMonths % 12) + 1).padStart(2, '0');
+    return new Date(`${year}-${month}-01T00:00:00-06:00`);
+});
+const CITRUS_PAYMENT_TS = CITRUS_PAYMENT_DATES.map(d => d.getTime());
+
+let citrusDom = null;
+let citrusLastPaid = -1;
 
 function updateCitrusPayments() {
-    const now = new Date();
+    const now = Date.now();
     let paid = 0;
-    for (let i = 0; i < CITRUS_TOTAL_PAYMENTS; i++) {
-        if (citrusPaymentDate(i) <= now) paid++;
+    while (paid < CITRUS_TOTAL_PAYMENTS && CITRUS_PAYMENT_TS[paid] <= now) paid++;
+    if (paid === citrusLastPaid) return;
+    citrusLastPaid = paid;
+
+    if (!citrusDom) {
+        citrusDom = {
+            paidCount: document.getElementById('ct-paid-count'),
+            remainingCount: document.getElementById('ct-remaining-count'),
+            paidAmount: document.getElementById('ct-paid-amount'),
+            remainingAmount: document.getElementById('ct-remaining-amount'),
+            fill: document.getElementById('ct-progress-fill'),
+            next: document.getElementById('ct-next'),
+        };
     }
+
     const remaining = CITRUS_TOTAL_PAYMENTS - paid;
-    const paidAmount = paid * CITRUS_PAYMENT_AMOUNT;
-    const remainingAmount = remaining * CITRUS_PAYMENT_AMOUNT;
-    const percent = (paid / CITRUS_TOTAL_PAYMENTS) * 100;
+    citrusDom.paidCount.textContent = paid;
+    citrusDom.remainingCount.textContent = remaining;
+    citrusDom.paidAmount.textContent = MXN_FORMATTER.format(paid * CITRUS_PAYMENT_AMOUNT);
+    citrusDom.remainingAmount.textContent = MXN_FORMATTER.format(remaining * CITRUS_PAYMENT_AMOUNT);
+    citrusDom.fill.style.width = `${(paid / CITRUS_TOTAL_PAYMENTS) * 100}%`;
 
-    const paidCountEl = document.getElementById('ct-paid-count');
-    const remainingCountEl = document.getElementById('ct-remaining-count');
-    const paidAmountEl = document.getElementById('ct-paid-amount');
-    const remainingAmountEl = document.getElementById('ct-remaining-amount');
-    const fillEl = document.getElementById('ct-progress-fill');
-    const nextEl = document.getElementById('ct-next');
-
-    if (paidCountEl) paidCountEl.textContent = paid;
-    if (remainingCountEl) remainingCountEl.textContent = remaining;
-    if (paidAmountEl) paidAmountEl.textContent = MXN_FORMATTER.format(paidAmount);
-    if (remainingAmountEl) remainingAmountEl.textContent = MXN_FORMATTER.format(remainingAmount);
-    if (fillEl) fillEl.style.width = `${percent}%`;
-
-    if (nextEl) {
-        if (paid >= CITRUS_TOTAL_PAYMENTS) {
-            nextEl.textContent = 'Plan completado';
-        } else {
-            const next = citrusPaymentDate(paid);
-            const monthName = SPANISH_MONTHS[next.getMonth()];
-            const year = next.getFullYear();
-            nextEl.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_PAYMENT_AMOUNT)} · 1 de ${monthName} ${year}`;
-        }
+    if (paid >= CITRUS_TOTAL_PAYMENTS) {
+        citrusDom.next.textContent = 'Plan completado';
+    } else {
+        const formatted = CITRUS_DATE_FORMATTER.format(CITRUS_PAYMENT_DATES[paid]);
+        citrusDom.next.textContent = `Próxima: ${MXN_FORMATTER.format(CITRUS_PAYMENT_AMOUNT)} · ${formatted}`;
     }
 }
 
