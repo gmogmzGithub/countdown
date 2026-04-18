@@ -1316,12 +1316,14 @@ body {
 
 .citrus-title {
     font-family: var(--font-display);
-    font-size: clamp(2.8rem, 11vw, 6rem);
+    font-size: clamp(1.4rem, 5.8vw, 2.8rem);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 0.95;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    margin-top: 8px;
     margin-bottom: 6px;
     text-align: center;
+    white-space: nowrap;
     color: transparent;
     background: linear-gradient(
         135deg,
@@ -1637,7 +1639,7 @@ body {
     }
 
     .citrus-title {
-        font-size: clamp(2.2rem, 12vw, 4.5rem);
+        font-size: clamp(1.1rem, 5.2vw, 2.2rem);
     }
 
     .citrus-grid {
