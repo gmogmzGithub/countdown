@@ -35,7 +35,7 @@ function pluralize(value, singular, plural) {
 // then Days/Hours/Minutes when days > 0,
 // then Hours/Minutes/Seconds, cascading down.
 
-function updateCountdown(prefix, targetDate) {
+function updateCountdown(prefix, targetDate, daysOnly = false) {
     const now = new Date();
     const diff = targetDate - now;
 
@@ -76,7 +76,10 @@ function updateCountdown(prefix, targetDate) {
     let v1, v2, v3, l1, l2, l3;
     let showThird = false;
 
-    if (years > 0) {
+    if (daysOnly) {
+        v1 = totalDays; l1 = pluralize(totalDays, 'Day', 'Days');
+        v2 = null;
+    } else if (years > 0) {
         v1 = years;  l1 = pluralize(years, 'Year', 'Years');
         v2 = months; l2 = pluralize(months, 'Month', 'Months');
         v3 = daysAfterMonths; l3 = pluralize(daysAfterMonths, 'Day', 'Days');
@@ -253,7 +256,7 @@ function initTabs() {
 function updateAll() {
     updateCountdown('hm', homeTargetDate);
     updateCountdown('crv', crvTargetDate);
-    updateCountdown('mk', makeoverTargetDate);
+    updateCountdown('mk', makeoverTargetDate, true);
     updateCountdown('bd', birthdayTargetDate);
     updateCountdown('ct', citrusTargetDate);
     updateCitrusPayments();
