@@ -9,6 +9,9 @@ const crvTargetDate = new Date('2028-11-01T12:00:00-06:00');
 // Mommy Makeover: August 12, 2026 at 11:30 AM
 const makeoverTargetDate = new Date('2026-08-12T11:30:00-06:00');
 
+const MAKEOVER_FIRST_RECOVERY_TS = new Date('2026-06-01T00:00:00-06:00').getTime();
+const MAKEOVER_FULL_RECOVERY_TS = new Date('2026-08-17T00:00:00-06:00').getTime();
+
 // Birthday Beach Trip: June 4, 2026 at 4:00 AM
 const birthdayTargetDate = new Date('2026-06-04T04:00:00-06:00');
 
@@ -186,6 +189,30 @@ function updateCitrusPayments() {
     citrusDom.fill.style.width = `${(paidAmount / CITRUS_TOTAL_AMOUNT) * 100}%`;
 }
 
+// ─── Makeover Recovery Milestones ───
+
+const MS_PER_DAY = 86400000;
+let makeoverDom = null;
+let makeoverLastFirst = -1;
+let makeoverLastFull = -1;
+
+function updateMakeoverMilestones() {
+    const now = Date.now();
+    const first = Math.max(0, Math.floor((MAKEOVER_FIRST_RECOVERY_TS - now) / MS_PER_DAY));
+    const full = Math.max(0, Math.floor((MAKEOVER_FULL_RECOVERY_TS - now) / MS_PER_DAY));
+    if (first === makeoverLastFirst && full === makeoverLastFull) return;
+    makeoverLastFirst = first;
+    makeoverLastFull = full;
+    if (!makeoverDom) {
+        makeoverDom = {
+            first: document.getElementById('mk-first-days'),
+            full: document.getElementById('mk-full-days'),
+        };
+    }
+    makeoverDom.first.textContent = first;
+    makeoverDom.full.textContent = full;
+}
+
 // ─── Tab Navigation ───
 
 function initTabs() {
@@ -243,6 +270,7 @@ function updateAll() {
     updateCountdown('bd', birthdayTargetDate);
     updateCountdown('ct', citrusTargetDate);
     updateCitrusPayments();
+    updateMakeoverMilestones();
 }
 
 initTabs();

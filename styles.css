@@ -918,6 +918,36 @@ body {
     font-style: italic;
 }
 
+.makeover-milestones {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+}
+
+.makeover-milestone {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 0.7rem;
+    font-weight: 300;
+    color: rgba(255, 200, 180, 0.5);
+    letter-spacing: 0.06em;
+}
+
+.makeover-milestone-label {
+    font-weight: 500;
+    color: rgba(255, 200, 180, 0.72);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 0.62rem;
+}
+
+.makeover-milestone-meta {
+    font-variant-numeric: tabular-nums;
+}
+
 /* ─── Panel: Birthday Beach Trip ─── */
 
 #panel-birthday {
