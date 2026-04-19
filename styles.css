@@ -901,51 +901,41 @@ body {
     color: rgba(255, 200, 180, 0.5);
 }
 
-.makeover-date {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: rgba(255, 200, 180, 0.7);
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
+.makeover-recoveries {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
 }
 
-.makeover-tagline {
-    font-size: 0.8rem;
-    font-weight: 300;
-    color: var(--white-50);
-    letter-spacing: 0.05em;
-    font-style: italic;
-}
-
-.makeover-milestones {
-    margin-top: 20px;
+.makeover-recovery {
     display: flex;
     flex-direction: column;
-    gap: 4px;
     align-items: center;
-}
-
-.makeover-milestone {
-    display: flex;
     gap: 10px;
-    align-items: baseline;
-    font-size: 0.7rem;
-    font-weight: 300;
-    color: rgba(255, 200, 180, 0.5);
-    letter-spacing: 0.06em;
 }
 
-.makeover-milestone-label {
-    font-weight: 500;
-    color: rgba(255, 200, 180, 0.72);
-    letter-spacing: 0.18em;
+.makeover-recovery-title {
+    font-family: var(--font-primary);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    font-size: 0.62rem;
+    color: rgba(255, 200, 180, 0.85);
 }
 
-.makeover-milestone-meta {
-    font-variant-numeric: tabular-nums;
+.makeover-recovery-unit {
+    min-width: 120px;
+    padding: 20px 22px;
+}
+
+.makeover-recovery-date {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255, 200, 180, 0.65);
+    letter-spacing: 0.1em;
 }
 
 /* ─── Panel: Birthday Beach Trip ─── */
@@ -1616,6 +1606,15 @@ body {
     .makeover-unit {
         min-width: 52px;
         padding: 10px 8px;
+    }
+
+    .makeover-recoveries {
+        gap: 18px;
+    }
+
+    .makeover-recovery-unit {
+        min-width: 88px;
+        padding: 14px 16px;
     }
 
     .makeover-title {
