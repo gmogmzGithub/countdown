@@ -211,6 +211,449 @@ function updateMakeoverRecoveries() {
     makeoverDom.full.textContent = full;
 }
 
+// ─── Protocolo: data ───
+
+const PROTOCOL_TASKS = [
+    { id: 'kegel-1', phase: 1, icon: '🏋️', name: 'Kegel · Fase 1', short: 'Contraer 3s · Relajar 3s · 15 reps × 3 series',
+      type: 'Ejercicio', frequency: 'Diario',
+      how: 'Contrae el músculo pubococcígeo (el que usas para detener la orina) durante 3 segundos. Relaja completamente durante 3 segundos. Repite 15 veces — eso es 1 serie. Haz 3 series, descansando 30s entre series.',
+      why: 'BJU International: 82.5% de hombres con eyaculación precoz mejoraron significativamente entrenando el suelo pélvico.',
+      warning: 'También practica la RELAJACIÓN — un músculo PC hipertónico empeora la EP.',
+      kegel: { contract: 3, relax: 3, reps: 15, sets: 3, rest: 30 } },
+    { id: 'zinc', phase: 1, icon: '💊', name: 'Zinc', short: '25–45 mg con comida',
+      type: 'Suplemento', frequency: 'Diario',
+      how: 'Tomar 25–45 mg de zinc con alguna comida del día (preferentemente que contenga proteína).',
+      why: 'Cofactor crítico para la síntesis de testosterona. Deficiencia se asocia con hipogonadismo y baja libido.' },
+    { id: 'd3', phase: 1, icon: '💊', name: 'Vitamina D3 + K2', short: '5,000 UI con comida con grasa',
+      type: 'Suplemento', frequency: 'Diario',
+      how: 'Tomar 5,000 UI de D3 + K2 con una comida que contenga grasa (mejora la absorción).',
+      why: 'Niveles óptimos de D3 correlacionan con mayor testosterona libre y mejor función eréctil.' },
+    { id: 'mg', phase: 1, icon: '💊', name: 'Magnesio Glicinato', short: '300–400 mg antes de dormir',
+      type: 'Suplemento', frequency: 'Diario',
+      how: 'Tomar 300–400 mg de magnesio glicinato 30–60 minutos antes de dormir.',
+      why: 'Mejora la calidad del sueño profundo y la regulación del eje hormonal nocturno donde se produce el pico de testosterona.' },
+    { id: 'omega3', phase: 1, icon: '💊', name: 'Omega-3', short: '2–3 g EPA+DHA con comida',
+      type: 'Suplemento', frequency: 'Diario',
+      how: 'Tomar 2–3 gramos de EPA+DHA combinados (no aceite de pescado total) con alguna comida.',
+      why: 'Reduce inflamación sistémica que afecta función endotelial y respuesta eréctil.' },
+    { id: 'training', phase: 1, icon: '🏃', name: 'Fuerza o cardio', short: '4 días por semana',
+      type: 'Ejercicio', frequency: '4×/semana',
+      how: 'Entrenamiento de fuerza (compuestos: sentadilla, peso muerto, press) o cardio moderado-intenso. 4 sesiones por semana.',
+      why: 'El ejercicio agudo eleva testosterona; el crónico mejora sensibilidad a insulina y salud endotelial.' },
+    { id: 'sleep', phase: 1, icon: '😴', name: 'Dormir 7–9 horas', short: 'En horario consistente',
+      type: 'Hábito', frequency: 'Diario',
+      how: 'Acostarte y levantarte a la misma hora ± 30 min, en oscuridad total. Pantallas off 30 min antes de dormir.',
+      why: 'La testosterona se produce mayormente en sueño profundo. 5 noches de mal sueño bajan testosterona 10–15%.' },
+
+    { id: 'stop-start', phase: 2, icon: '🧘', name: 'Técnica Stop-Start', short: '3–4 veces por semana',
+      type: 'Entrenamiento', frequency: '3–4×/semana',
+      how: 'Masturbación controlada: al llegar al 70–80% del umbral eyaculatorio, pausa por completo hasta que la sensación baje al 30–40%. Repite 4–5 ciclos antes de permitir eyaculación.',
+      why: 'Entrena el control consciente del umbral eyaculatorio y desensibiliza el reflejo automático.' },
+    { id: 'kegel-2', phase: 2, icon: '🏋️', name: 'Kegel · Fase 2', short: 'Contraer 5s · Relajar 5s · 20 reps × 3 series',
+      type: 'Ejercicio', frequency: 'Diario',
+      how: 'Contrae el PC durante 5 segundos, relaja completamente 5 segundos. 20 reps por serie × 3 series, con 30s de descanso entre series.',
+      why: 'Fortalecimiento progresivo del suelo pélvico; mejora capacidad de mantener contracción bajo demanda.',
+      warning: 'Mantén la atención en la relajación — no dejes el músculo tenso entre reps.',
+      kegel: { contract: 5, relax: 5, reps: 20, sets: 3, rest: 30 } },
+    { id: 'ashwagandha', phase: 2, icon: '💊', name: 'Ashwagandha KSM-66', short: '300–600 mg con comida',
+      type: 'Suplemento', frequency: 'Diario',
+      how: 'Tomar 300–600 mg de extracto estandarizado KSM-66 con una comida.',
+      why: 'Reduce cortisol (antagonista hormonal de testosterona) y mejora respuesta al estrés.' },
+    { id: 'citrulina', phase: 2, icon: '💊', name: 'L-Citrulina', short: '3–6 g en ayunas',
+      type: 'Suplemento', frequency: 'Diario',
+      how: 'Tomar 3–6 g en ayunas o 30–60 min antes de entrenar/actividad sexual.',
+      why: 'Precursor de arginina → óxido nítrico → vasodilatación. Mejora rigidez y respuesta eréctil.' },
+    { id: 'hiit', phase: 2, icon: '⚡', name: 'HIIT', short: '20–30 min · 2 veces por semana',
+      type: 'Ejercicio', frequency: '2×/semana',
+      how: 'Intervalos de alta intensidad (e.g., 30s al máximo / 90s recuperación) durante 20–30 min. 2 sesiones por semana.',
+      why: 'Incrementa hormona de crecimiento y testosterona aguda más que el cardio steady-state.' },
+
+    { id: 'kegel-3', phase: 3, icon: '🏋️', name: 'Kegel · Fase 3', short: 'Flutter + Largas combinadas',
+      type: 'Ejercicio', frequency: 'Diario',
+      how: 'Flutter: contracciones rápidas (0.5s on / 0.5s off) × 20. Largas: contracciones de 10s × 10. Combina ambas en 3 series.',
+      why: 'Desarrolla resistencia (fibras lentas) y respuesta rápida (fibras rápidas) del músculo PC.',
+      kegel: { compound: true, parts: [
+          { label: 'Flutter', contract: 0.5, relax: 0.5, reps: 20 },
+          { label: 'Largas', contract: 10, relax: 10, reps: 10 }
+      ], sets: 3, rest: 45 } },
+    { id: 'relax-pc', phase: 3, icon: '🧘', name: 'Relajación PC', short: '10 reps de relajación completa',
+      type: 'Ejercicio', frequency: 'Diario',
+      how: 'Sentado o acostado, identifica el músculo PC y relájalo completamente durante 10–15 segundos. 10 reps.',
+      why: 'La hipertonía del suelo pélvico empeora la EP. Este ejercicio enseña el opuesto a la contracción.' },
+    { id: 'tongkat', phase: 3, icon: '💊', name: 'Tongkat Ali', short: '200–400 mg estandarizado 2%',
+      type: 'Suplemento', frequency: 'Diario',
+      how: 'Tomar 200–400 mg de extracto estandarizado al 2% de eurycomanona, con comida.',
+      why: 'Incrementa testosterona libre y biodisponible; reduce SHBG.' },
+];
+
+const PHASE_NAMES = ['', 'Reset Neurológico', 'Entrenamiento Activo', 'Consolidación'];
+const PHASE_RANGES = [null, [1, 28], [29, 56], [57, 112]];
+const PROTOCOL_TOTAL_DAYS = 112;
+const PROTOCOL_STATE_KEY = 'protocolo:state';
+
+// ─── Protocolo: state ───
+
+function todayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function loadProtocolState() {
+    try {
+        const raw = localStorage.getItem(PROTOCOL_STATE_KEY);
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.startDate) return parsed;
+        }
+    } catch {}
+    const state = { startDate: todayKey(), done: {} };
+    saveProtocolState(state);
+    return state;
+}
+
+function saveProtocolState(state) {
+    localStorage.setItem(PROTOCOL_STATE_KEY, JSON.stringify(state));
+}
+
+function resetProtocolState() {
+    const state = { startDate: todayKey(), done: {} };
+    saveProtocolState(state);
+    return state;
+}
+
+function getProtocolStatus() {
+    const state = loadProtocolState();
+    const start = new Date(state.startDate + 'T00:00:00');
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dayNum = Math.floor((today - start) / 86400000) + 1;
+    const week = Math.ceil(dayNum / 7);
+    let phase;
+    if (dayNum < 1) phase = 0;
+    else if (dayNum <= 28) phase = 1;
+    else if (dayNum <= 56) phase = 2;
+    else if (dayNum <= PROTOCOL_TOTAL_DAYS) phase = 3;
+    else phase = 4;
+    return { dayNum, week, phase, state };
+}
+
+function tasksForPhase(phase) {
+    if (phase < 1 || phase > 3) return [];
+    return PROTOCOL_TASKS.filter(t => t.phase <= phase);
+}
+
+function isTaskDoneToday(taskId, state) {
+    return (state.done[todayKey()] || []).includes(taskId);
+}
+
+function toggleTaskDone(taskId) {
+    const state = loadProtocolState();
+    const today = todayKey();
+    if (!state.done[today]) state.done[today] = [];
+    const idx = state.done[today].indexOf(taskId);
+    if (idx >= 0) state.done[today].splice(idx, 1);
+    else state.done[today].push(taskId);
+    saveProtocolState(state);
+}
+
+// ─── Protocolo: render ───
+
+let protocoloLastRenderKey = '';
+
+function renderProtocolo() {
+    const { dayNum, week, phase, state } = getProtocolStatus();
+    const tasks = tasksForPhase(phase);
+    const doneToday = state.done[todayKey()] || [];
+    const doneCount = tasks.filter(t => doneToday.includes(t.id)).length;
+
+    const key = `${todayKey()}|${phase}|${dayNum}|${doneCount}|${tasks.length}`;
+    if (key === protocoloLastRenderKey) return;
+    protocoloLastRenderKey = key;
+
+    const phaseTag = document.getElementById('protocolo-phase-tag');
+    const phaseName = document.getElementById('protocolo-phase-name');
+    const dayRow = document.getElementById('protocolo-day-row');
+    const fill = document.getElementById('protocolo-progress-fill');
+    const progressText = document.getElementById('protocolo-progress-text');
+    const container = document.getElementById('protocolo-tasks');
+
+    if (phase === 4) {
+        phaseTag.textContent = 'COMPLETO';
+        phaseName.textContent = 'Mantenimiento';
+        dayRow.textContent = `Día ${dayNum} · más allá del protocolo`;
+        fill.style.width = '100%';
+        progressText.textContent = '🎯';
+        container.innerHTML = `
+            <div class="protocolo-empty">
+                <div class="protocolo-empty-title">Protocolo completado</div>
+                <div class="protocolo-empty-body">16 semanas. Mantén Kegel + suplementos clave en modo sostenido. El reset terminó — esto es ahora estilo de vida.</div>
+            </div>
+        `;
+        return;
+    }
+
+    if (phase === 0) {
+        phaseTag.textContent = 'PENDIENTE';
+        phaseName.textContent = 'Aún no inicia';
+        dayRow.textContent = `Empieza en ${Math.abs(dayNum - 1)} día(s)`;
+        fill.style.width = '0%';
+        progressText.textContent = '—';
+        container.innerHTML = '';
+        return;
+    }
+
+    phaseTag.textContent = `FASE ${phase}`;
+    phaseName.textContent = PHASE_NAMES[phase];
+    dayRow.textContent = `Semana ${week} · Día ${dayNum} de ${PROTOCOL_TOTAL_DAYS}`;
+    const pct = tasks.length > 0 ? (doneCount / tasks.length) * 100 : 0;
+    fill.style.width = `${pct}%`;
+    progressText.textContent = `${doneCount} / ${tasks.length} hoy`;
+
+    container.innerHTML = '';
+    for (const task of tasks) {
+        const done = doneToday.includes(task.id);
+        const item = document.createElement('button');
+        item.className = `protocolo-task${done ? ' done' : ''}`;
+        item.dataset.id = task.id;
+        item.innerHTML = `
+            <span class="protocolo-task-check">✓</span>
+            <span class="protocolo-task-icon">${task.icon}</span>
+            <span class="protocolo-task-info">
+                <span class="protocolo-task-name">${task.name}</span>
+                <span class="protocolo-task-short">${task.short}</span>
+            </span>
+            <span class="protocolo-task-chev">›</span>
+        `;
+        item.addEventListener('click', () => openTaskSheet(task.id));
+        container.appendChild(item);
+    }
+}
+
+// ─── Protocolo: bottom sheet ───
+
+function openTaskSheet(taskId) {
+    const task = PROTOCOL_TASKS.find(t => t.id === taskId);
+    if (!task) return;
+    const sheet = document.getElementById('protocolo-sheet');
+    const content = document.getElementById('protocolo-sheet-content');
+    const state = loadProtocolState();
+    const done = isTaskDoneToday(taskId, state);
+
+    const warningHtml = task.warning
+        ? `<div class="sheet-warning"><span>⚠️</span><span>${task.warning}</span></div>` : '';
+    const timerBtnHtml = task.kegel
+        ? `<button class="sheet-btn sheet-btn-primary" id="sheet-timer-btn">▶ Iniciar temporizador guiado</button>` : '';
+
+    content.innerHTML = `
+        <div class="sheet-title">
+            <span class="sheet-title-icon">${task.icon}</span>
+            <span class="sheet-title-name">${task.name}</span>
+        </div>
+        <div class="sheet-meta">${task.type} · ${task.frequency}</div>
+        <div class="sheet-section">
+            <div class="sheet-section-label">Cómo hacerlo</div>
+            <div class="sheet-section-body">${task.how}</div>
+        </div>
+        <div class="sheet-section">
+            <div class="sheet-section-label">¿Por qué?</div>
+            <div class="sheet-section-body">${task.why}</div>
+        </div>
+        ${warningHtml}
+        <div class="sheet-actions">
+            ${timerBtnHtml}
+            <button class="sheet-btn ${done ? 'sheet-btn-undo' : 'sheet-btn-done'}" id="sheet-done-btn">
+                ${done ? '↩ Desmarcar' : '✓ Marcar como hecho'}
+            </button>
+        </div>
+    `;
+
+    document.getElementById('sheet-done-btn').addEventListener('click', () => {
+        toggleTaskDone(taskId);
+        protocoloLastRenderKey = '';
+        renderProtocolo();
+        closeTaskSheet();
+    });
+
+    if (task.kegel) {
+        document.getElementById('sheet-timer-btn').addEventListener('click', () => {
+            closeTaskSheet();
+            setTimeout(() => startKegelTimer(task), 320);
+        });
+    }
+
+    sheet.hidden = false;
+    requestAnimationFrame(() => sheet.classList.add('open'));
+}
+
+function closeTaskSheet() {
+    const sheet = document.getElementById('protocolo-sheet');
+    sheet.classList.remove('open');
+    setTimeout(() => { sheet.hidden = true; }, 350);
+}
+
+// ─── Protocolo: Kegel timer ───
+
+const kegelState = {
+    task: null,
+    set: 1,
+    rep: 0,
+    partIndex: 0,
+    phase: 'idle',
+    phaseStartMs: 0,
+    phaseDurationMs: 0,
+    paused: false,
+    pausedAtMs: 0,
+    rafId: null,
+    dom: null,
+};
+
+function startKegelTimer(task) {
+    if (task.kegel.compound) {
+        alert('El temporizador compuesto (Fase 3) aún no está disponible. Sigue las instrucciones manualmente y márcala como hecha cuando termines.');
+        return;
+    }
+
+    if (!kegelState.dom) {
+        kegelState.dom = {
+            overlay: document.getElementById('protocolo-timer'),
+            taskLabel: document.getElementById('protocolo-timer-task'),
+            stateLabel: document.getElementById('protocolo-timer-state'),
+            pulse: document.getElementById('protocolo-timer-pulse'),
+            count: document.getElementById('protocolo-timer-count'),
+            rep: document.getElementById('protocolo-timer-rep'),
+            repTotal: document.getElementById('protocolo-timer-rep-total'),
+            set: document.getElementById('protocolo-timer-set'),
+            setTotal: document.getElementById('protocolo-timer-set-total'),
+            pause: document.getElementById('protocolo-timer-pause'),
+        };
+    }
+    const d = kegelState.dom;
+
+    kegelState.task = task;
+    kegelState.set = 1;
+    kegelState.rep = 0;
+    kegelState.paused = false;
+    d.taskLabel.textContent = task.name;
+    d.repTotal.textContent = task.kegel.reps;
+    d.setTotal.textContent = task.kegel.sets;
+    d.set.textContent = kegelState.set;
+    d.rep.textContent = '0';
+    d.pause.textContent = 'Pausar';
+    d.overlay.hidden = false;
+
+    enterPhase('ready', 3000);
+}
+
+function enterPhase(phase, durationMs) {
+    kegelState.phase = phase;
+    kegelState.phaseDurationMs = durationMs;
+    kegelState.phaseStartMs = performance.now();
+
+    const labels = { ready: 'PREPÁRATE', contract: 'CONTRAE', relax: 'RELAJA', rest: 'DESCANSA' };
+    const d = kegelState.dom;
+    d.stateLabel.textContent = labels[phase];
+    d.pulse.classList.remove('contract', 'relax', 'rest');
+    if (phase === 'contract') d.pulse.classList.add('contract');
+    else if (phase === 'relax') d.pulse.classList.add('relax');
+    else if (phase === 'rest') d.pulse.classList.add('rest');
+    d.rep.textContent = kegelState.rep;
+    d.set.textContent = kegelState.set;
+
+    if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
+    tickKegel();
+}
+
+function tickKegel() {
+    if (kegelState.paused) return;
+    const elapsed = performance.now() - kegelState.phaseStartMs;
+    const remaining = kegelState.phaseDurationMs - elapsed;
+    if (remaining <= 0) {
+        advanceKegelPhase();
+        return;
+    }
+    kegelState.dom.count.textContent = Math.ceil(remaining / 1000);
+    kegelState.rafId = requestAnimationFrame(tickKegel);
+}
+
+function advanceKegelPhase() {
+    const t = kegelState.task.kegel;
+    const phase = kegelState.phase;
+
+    if (phase === 'ready') {
+        kegelState.rep = 1;
+        enterPhase('contract', t.contract * 1000);
+    } else if (phase === 'contract') {
+        enterPhase('relax', t.relax * 1000);
+    } else if (phase === 'relax') {
+        if (kegelState.rep < t.reps) {
+            kegelState.rep++;
+            enterPhase('contract', t.contract * 1000);
+        } else if (kegelState.set < t.sets) {
+            kegelState.set++;
+            kegelState.rep = 0;
+            enterPhase('rest', (t.rest || 30) * 1000);
+        } else {
+            completeKegel();
+        }
+    } else if (phase === 'rest') {
+        kegelState.rep = 1;
+        enterPhase('contract', t.contract * 1000);
+    }
+}
+
+function completeKegel() {
+    const d = kegelState.dom;
+    d.stateLabel.textContent = '¡COMPLETO!';
+    d.count.textContent = '✓';
+    d.pulse.classList.remove('contract', 'relax', 'rest');
+    if (!isTaskDoneToday(kegelState.task.id, loadProtocolState())) {
+        toggleTaskDone(kegelState.task.id);
+        protocoloLastRenderKey = '';
+        renderProtocolo();
+    }
+    setTimeout(closeKegelTimer, 1800);
+}
+
+function closeKegelTimer() {
+    if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
+    kegelState.rafId = null;
+    kegelState.phase = 'idle';
+    kegelState.paused = false;
+    if (kegelState.dom) kegelState.dom.overlay.hidden = true;
+}
+
+function toggleKegelPause() {
+    if (kegelState.phase === 'idle') return;
+    if (!kegelState.paused) {
+        kegelState.paused = true;
+        kegelState.pausedAtMs = performance.now();
+        kegelState.dom.pause.textContent = 'Reanudar';
+        if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
+    } else {
+        const pauseDuration = performance.now() - kegelState.pausedAtMs;
+        kegelState.phaseStartMs += pauseDuration;
+        kegelState.paused = false;
+        kegelState.dom.pause.textContent = 'Pausar';
+        tickKegel();
+    }
+}
+
+// ─── Protocolo: init ───
+
+function initProtocolo() {
+    document.getElementById('protocolo-sheet-backdrop').addEventListener('click', closeTaskSheet);
+    document.getElementById('protocolo-timer-close').addEventListener('click', closeKegelTimer);
+    document.getElementById('protocolo-timer-pause').addEventListener('click', toggleKegelPause);
+    document.getElementById('protocolo-reset-btn').addEventListener('click', () => {
+        if (confirm('¿Reiniciar el protocolo? Día 1 quedará como hoy y se borran los registros de tareas.')) {
+            resetProtocolState();
+            protocoloLastRenderKey = '';
+            renderProtocolo();
+        }
+    });
+    renderProtocolo();
+}
+
 // ─── Tab Navigation ───
 
 function initTabs() {
@@ -261,6 +704,8 @@ function initTabs() {
 
 // ─── Init ───
 
+let lastProtocoloDayKey = todayKey();
+
 function updateAll() {
     updateCountdown('hm', homeTargetDate);
     updateCountdown('crv', crvTargetDate);
@@ -268,8 +713,15 @@ function updateAll() {
     updateCountdown('ct', citrusTargetDate);
     updateCitrusPayments();
     updateMakeoverRecoveries();
+    const dayKey = todayKey();
+    if (dayKey !== lastProtocoloDayKey) {
+        lastProtocoloDayKey = dayKey;
+        protocoloLastRenderKey = '';
+        renderProtocolo();
+    }
 }
 
 initTabs();
+initProtocolo();
 updateAll();
 setInterval(updateAll, 1000);
