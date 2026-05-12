@@ -359,8 +359,28 @@ function toggleTaskDone(taskId) {
 // ─── Protocolo: render ───
 
 let protocoloLastRenderKey = '';
+let protocoloView = 'list';
+let currentKegelTaskId = null;
 
 function renderProtocolo() {
+    if (protocoloView === 'kegel') {
+        renderKegelView();
+        return;
+    }
+    renderListView();
+}
+
+function showView(view) {
+    protocoloView = view;
+    document.getElementById('protocolo-view-list').hidden = view !== 'list';
+    document.getElementById('protocolo-view-kegel').hidden = view !== 'kegel';
+    if (view === 'list') {
+        protocoloLastRenderKey = '';
+        renderListView();
+    }
+}
+
+function renderListView() {
     const { dayNum, phase, state } = getProtocolStatus();
     const tasks = tasksForPhase(phase);
     const doneToday = state.done[todayKey()] || [];
@@ -391,8 +411,9 @@ function renderProtocolo() {
     container.innerHTML = '';
     for (const task of tasks) {
         const done = doneToday.includes(task.id);
+        const isKegel = !!task.kegel;
         const item = document.createElement('button');
-        item.className = `protocolo-task${done ? ' done' : ''}`;
+        item.className = `protocolo-task${done ? ' done' : ''}${isKegel ? ' has-detail' : ''}`;
         item.dataset.id = task.id;
         item.innerHTML = `
             <span class="protocolo-task-check">✓</span>
@@ -401,17 +422,212 @@ function renderProtocolo() {
                 <div class="protocolo-task-name">${task.name}</div>
                 <div class="protocolo-task-short">${task.short}</div>
             </div>
+            ${isKegel ? '<span class="protocolo-task-chev">›</span>' : ''}
         `;
         item.addEventListener('click', () => {
-            toggleTaskDone(task.id);
-            protocoloLastRenderKey = '';
-            renderProtocolo();
+            if (isKegel) {
+                openKegelView(task.id);
+            } else {
+                toggleTaskDone(task.id);
+                protocoloLastRenderKey = '';
+                renderListView();
+            }
         });
         container.appendChild(item);
     }
 }
 
+function openKegelView(taskId) {
+    currentKegelTaskId = taskId;
+    showView('kegel');
+}
+
+function closeKegelView() {
+    if (kegelState.phase !== 'idle') resetKegelTimer();
+    currentKegelTaskId = null;
+    showView('list');
+}
+
+function renderKegelView() {
+    const task = PROTOCOL_TASKS.find(t => t.id === currentKegelTaskId);
+    if (!task) { closeKegelView(); return; }
+
+    const detail = document.getElementById('kegel-detail');
+    const warningHtml = task.warning
+        ? `<div class="kegel-warning"><span>⚠️</span><span>${task.warning}</span></div>` : '';
+    const isCompound = task.kegel?.compound;
+
+    detail.innerHTML = `
+        <div class="kegel-title">
+            <span class="kegel-title-icon">${task.icon}</span>
+            <div>
+                <div class="kegel-title-name">${task.name}</div>
+                <div class="kegel-title-meta">${task.type} · ${task.frequency}</div>
+            </div>
+        </div>
+        <div class="kegel-summary">${task.short}</div>
+        <div class="kegel-section">
+            <div class="kegel-section-label">Cómo hacerlo</div>
+            <div class="kegel-section-body">${task.how}</div>
+        </div>
+        <div class="kegel-section">
+            <div class="kegel-section-label">¿Por qué?</div>
+            <div class="kegel-section-body">${task.why}</div>
+        </div>
+        ${warningHtml}
+        ${isCompound ? '<div class="kegel-note">El timer guiado para Fase 3 (Flutter + Largas) está en desarrollo. Sigue las instrucciones manualmente y marca como hecho al terminar.</div>' : ''}
+    `;
+
+    const done = isTaskDoneToday(task.id, loadProtocolState());
+    const doneBtn = document.getElementById('kegel-done');
+    doneBtn.textContent = done ? '↩ Desmarcar' : '✓ Marcar como hecho';
+
+    document.getElementById('kegel-rep-total').textContent = task.kegel.reps || '—';
+    document.getElementById('kegel-set-total').textContent = task.kegel.sets || '—';
+    document.getElementById('kegel-rep').textContent = '0';
+    document.getElementById('kegel-set').textContent = '1';
+    document.getElementById('kegel-count').textContent = '—';
+    document.getElementById('kegel-state').textContent = 'LISTO';
+    document.getElementById('kegel-pulse').className = 'kegel-pulse';
+
+    const startBtn = document.getElementById('kegel-start');
+    startBtn.textContent = '▶ Iniciar timer';
+    startBtn.disabled = !!isCompound;
+    startBtn.style.opacity = isCompound ? '0.4' : '1';
+}
+
+// ─── Kegel timer state machine ───
+
+const kegelState = {
+    task: null,
+    set: 1,
+    rep: 0,
+    phase: 'idle',
+    phaseStartMs: 0,
+    phaseDurationMs: 0,
+    paused: false,
+    pausedAtMs: 0,
+    rafId: null,
+};
+
+function startKegelTimer() {
+    const task = PROTOCOL_TASKS.find(t => t.id === currentKegelTaskId);
+    if (!task || task.kegel.compound) return;
+
+    if (kegelState.phase === 'idle') {
+        kegelState.task = task;
+        kegelState.set = 1;
+        kegelState.rep = 0;
+        kegelState.paused = false;
+        document.getElementById('kegel-start').textContent = '⏸ Pausar';
+        enterKegelPhase('ready', 3000);
+    } else {
+        toggleKegelPause();
+    }
+}
+
+function enterKegelPhase(phase, durationMs) {
+    kegelState.phase = phase;
+    kegelState.phaseDurationMs = durationMs;
+    kegelState.phaseStartMs = performance.now();
+
+    const labels = { ready: 'PREPÁRATE', contract: 'CONTRAE', relax: 'RELAJA', rest: 'DESCANSA' };
+    document.getElementById('kegel-state').textContent = labels[phase];
+    const pulse = document.getElementById('kegel-pulse');
+    pulse.className = 'kegel-pulse';
+    if (phase === 'contract') pulse.classList.add('contract');
+    else if (phase === 'relax') pulse.classList.add('relax');
+    else if (phase === 'rest') pulse.classList.add('rest');
+    document.getElementById('kegel-rep').textContent = kegelState.rep;
+    document.getElementById('kegel-set').textContent = kegelState.set;
+
+    if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
+    tickKegel();
+}
+
+function tickKegel() {
+    if (kegelState.paused) return;
+    const elapsed = performance.now() - kegelState.phaseStartMs;
+    const remaining = kegelState.phaseDurationMs - elapsed;
+    if (remaining <= 0) {
+        advanceKegelPhase();
+        return;
+    }
+    document.getElementById('kegel-count').textContent = Math.ceil(remaining / 1000);
+    kegelState.rafId = requestAnimationFrame(tickKegel);
+}
+
+function advanceKegelPhase() {
+    const t = kegelState.task.kegel;
+    const phase = kegelState.phase;
+
+    if (phase === 'ready') {
+        kegelState.rep = 1;
+        enterKegelPhase('contract', t.contract * 1000);
+    } else if (phase === 'contract') {
+        enterKegelPhase('relax', t.relax * 1000);
+    } else if (phase === 'relax') {
+        if (kegelState.rep < t.reps) {
+            kegelState.rep++;
+            enterKegelPhase('contract', t.contract * 1000);
+        } else if (kegelState.set < t.sets) {
+            kegelState.set++;
+            kegelState.rep = 0;
+            enterKegelPhase('rest', (t.rest || 30) * 1000);
+        } else {
+            completeKegel();
+        }
+    } else if (phase === 'rest') {
+        kegelState.rep = 1;
+        enterKegelPhase('contract', t.contract * 1000);
+    }
+}
+
+function completeKegel() {
+    document.getElementById('kegel-state').textContent = '¡COMPLETO!';
+    document.getElementById('kegel-count').textContent = '✓';
+    document.getElementById('kegel-pulse').className = 'kegel-pulse complete';
+    if (!isTaskDoneToday(kegelState.task.id, loadProtocolState())) {
+        toggleTaskDone(kegelState.task.id);
+    }
+    kegelState.phase = 'idle';
+    document.getElementById('kegel-start').textContent = '▶ Iniciar de nuevo';
+    setTimeout(() => closeKegelView(), 1800);
+}
+
+function toggleKegelPause() {
+    if (kegelState.phase === 'idle') return;
+    if (!kegelState.paused) {
+        kegelState.paused = true;
+        kegelState.pausedAtMs = performance.now();
+        document.getElementById('kegel-start').textContent = '▶ Reanudar';
+        if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
+    } else {
+        const pauseDuration = performance.now() - kegelState.pausedAtMs;
+        kegelState.phaseStartMs += pauseDuration;
+        kegelState.paused = false;
+        document.getElementById('kegel-start').textContent = '⏸ Pausar';
+        tickKegel();
+    }
+}
+
+function resetKegelTimer() {
+    if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
+    kegelState.rafId = null;
+    kegelState.phase = 'idle';
+    kegelState.paused = false;
+    kegelState.set = 1;
+    kegelState.rep = 0;
+}
+
 function initProtocolo() {
+    document.getElementById('kegel-back').addEventListener('click', closeKegelView);
+    document.getElementById('kegel-start').addEventListener('click', startKegelTimer);
+    document.getElementById('kegel-done').addEventListener('click', () => {
+        if (!currentKegelTaskId) return;
+        toggleTaskDone(currentKegelTaskId);
+        closeKegelView();
+    });
     renderProtocolo();
 }
 

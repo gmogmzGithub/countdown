@@ -274,8 +274,28 @@
     <section class="panel" id="panel-protocolo" role="tabpanel" aria-labelledby="tab-protocolo" hidden>
         <div class="overlay overlay-protocolo"></div>
         <div class="protocolo-panel">
-            <div class="protocolo-day-line" id="protocolo-day-line">Fase 1 &middot; D&iacute;a 1</div>
-            <div class="protocolo-tasks" id="protocolo-tasks"></div>
+            <div class="protocolo-view protocolo-view-list" id="protocolo-view-list">
+                <div class="protocolo-day-line" id="protocolo-day-line">Fase 1 &middot; D&iacute;a 1</div>
+                <div class="protocolo-tasks" id="protocolo-tasks"></div>
+            </div>
+            <div class="protocolo-view protocolo-view-kegel" id="protocolo-view-kegel" hidden>
+                <button class="kegel-back" id="kegel-back" aria-label="Volver">&larr; Volver</button>
+                <div class="kegel-detail" id="kegel-detail"></div>
+                <div class="kegel-timer-card" id="kegel-timer-card">
+                    <div class="kegel-state" id="kegel-state">LISTO</div>
+                    <div class="kegel-pulse" id="kegel-pulse">
+                        <div class="kegel-count" id="kegel-count">&mdash;</div>
+                    </div>
+                    <div class="kegel-meta">
+                        <span>Rep <span id="kegel-rep">0</span> / <span id="kegel-rep-total">15</span></span>
+                        <span>Serie <span id="kegel-set">1</span> / <span id="kegel-set-total">3</span></span>
+                    </div>
+                </div>
+                <div class="kegel-actions">
+                    <button class="kegel-btn kegel-btn-primary" id="kegel-start">&#9654; Iniciar timer</button>
+                    <button class="kegel-btn" id="kegel-done">&#10003; Marcar como hecho</button>
+                </div>
+            </div>
         </div>
     </section>
 
