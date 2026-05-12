@@ -361,7 +361,7 @@ function toggleTaskDone(taskId) {
 let protocoloLastRenderKey = '';
 
 function renderProtocolo() {
-    const { dayNum, week, phase, state } = getProtocolStatus();
+    const { dayNum, phase, state } = getProtocolStatus();
     const tasks = tasksForPhase(phase);
     const doneToday = state.done[todayKey()] || [];
     const doneCount = tasks.filter(t => doneToday.includes(t.id)).length;
@@ -370,44 +370,23 @@ function renderProtocolo() {
     if (key === protocoloLastRenderKey) return;
     protocoloLastRenderKey = key;
 
-    const phaseTag = document.getElementById('protocolo-phase-tag');
-    const phaseName = document.getElementById('protocolo-phase-name');
-    const dayRow = document.getElementById('protocolo-day-row');
-    const fill = document.getElementById('protocolo-progress-fill');
-    const progressText = document.getElementById('protocolo-progress-text');
+    const dayLine = document.getElementById('protocolo-day-line');
     const container = document.getElementById('protocolo-tasks');
+    if (!dayLine || !container) return;
 
     if (phase === 4) {
-        phaseTag.textContent = 'COMPLETO';
-        phaseName.textContent = 'Mantenimiento';
-        dayRow.textContent = `Día ${dayNum} · más allá del protocolo`;
-        fill.style.width = '100%';
-        progressText.textContent = '🎯';
-        container.innerHTML = `
-            <div class="protocolo-empty">
-                <div class="protocolo-empty-title">Protocolo completado</div>
-                <div class="protocolo-empty-body">16 semanas. Mantén Kegel + suplementos clave en modo sostenido. El reset terminó — esto es ahora estilo de vida.</div>
-            </div>
-        `;
+        dayLine.textContent = `Día ${dayNum} · Mantenimiento`;
+        container.innerHTML = `<div class="protocolo-empty">Protocolo de 112 días completado. Mantén Kegel + suplementos clave como hábito sostenido.</div>`;
         return;
     }
 
     if (phase === 0) {
-        phaseTag.textContent = 'PENDIENTE';
-        phaseName.textContent = 'Aún no inicia';
-        dayRow.textContent = `Empieza en ${Math.abs(dayNum - 1)} día(s)`;
-        fill.style.width = '0%';
-        progressText.textContent = '—';
+        dayLine.textContent = `Empieza en ${Math.abs(dayNum - 1)} día(s)`;
         container.innerHTML = '';
         return;
     }
 
-    phaseTag.textContent = `FASE ${phase}`;
-    phaseName.textContent = PHASE_NAMES[phase];
-    dayRow.textContent = `Semana ${week} · Día ${dayNum} de ${PROTOCOL_TOTAL_DAYS}`;
-    const pct = tasks.length > 0 ? (doneCount / tasks.length) * 100 : 0;
-    fill.style.width = `${pct}%`;
-    progressText.textContent = `${doneCount} / ${tasks.length} hoy`;
+    dayLine.textContent = `Fase ${phase} · ${PHASE_NAMES[phase]} · Día ${dayNum} · ${doneCount}/${tasks.length}`;
 
     container.innerHTML = '';
     for (const task of tasks) {
@@ -418,239 +397,21 @@ function renderProtocolo() {
         item.innerHTML = `
             <span class="protocolo-task-check">✓</span>
             <span class="protocolo-task-icon">${task.icon}</span>
-            <span class="protocolo-task-info">
-                <span class="protocolo-task-name">${task.name}</span>
-                <span class="protocolo-task-short">${task.short}</span>
-            </span>
-            <span class="protocolo-task-chev">›</span>
+            <div class="protocolo-task-info">
+                <div class="protocolo-task-name">${task.name}</div>
+                <div class="protocolo-task-short">${task.short}</div>
+            </div>
         `;
-        item.addEventListener('click', () => openTaskSheet(task.id));
+        item.addEventListener('click', () => {
+            toggleTaskDone(task.id);
+            protocoloLastRenderKey = '';
+            renderProtocolo();
+        });
         container.appendChild(item);
     }
 }
 
-// ─── Protocolo: bottom sheet ───
-
-function openTaskSheet(taskId) {
-    const task = PROTOCOL_TASKS.find(t => t.id === taskId);
-    if (!task) return;
-    const sheet = document.getElementById('protocolo-sheet');
-    const content = document.getElementById('protocolo-sheet-content');
-    const state = loadProtocolState();
-    const done = isTaskDoneToday(taskId, state);
-
-    const warningHtml = task.warning
-        ? `<div class="sheet-warning"><span>⚠️</span><span>${task.warning}</span></div>` : '';
-    const timerBtnHtml = task.kegel
-        ? `<button class="sheet-btn sheet-btn-primary" id="sheet-timer-btn">▶ Iniciar temporizador guiado</button>` : '';
-
-    content.innerHTML = `
-        <div class="sheet-title">
-            <span class="sheet-title-icon">${task.icon}</span>
-            <span class="sheet-title-name">${task.name}</span>
-        </div>
-        <div class="sheet-meta">${task.type} · ${task.frequency}</div>
-        <div class="sheet-section">
-            <div class="sheet-section-label">Cómo hacerlo</div>
-            <div class="sheet-section-body">${task.how}</div>
-        </div>
-        <div class="sheet-section">
-            <div class="sheet-section-label">¿Por qué?</div>
-            <div class="sheet-section-body">${task.why}</div>
-        </div>
-        ${warningHtml}
-        <div class="sheet-actions">
-            ${timerBtnHtml}
-            <button class="sheet-btn ${done ? 'sheet-btn-undo' : 'sheet-btn-done'}" id="sheet-done-btn">
-                ${done ? '↩ Desmarcar' : '✓ Marcar como hecho'}
-            </button>
-        </div>
-    `;
-
-    document.getElementById('sheet-done-btn').addEventListener('click', () => {
-        toggleTaskDone(taskId);
-        protocoloLastRenderKey = '';
-        renderProtocolo();
-        closeTaskSheet();
-    });
-
-    if (task.kegel) {
-        document.getElementById('sheet-timer-btn').addEventListener('click', () => {
-            closeTaskSheet();
-            setTimeout(() => startKegelTimer(task), 320);
-        });
-    }
-
-    sheet.hidden = false;
-    requestAnimationFrame(() => sheet.classList.add('open'));
-}
-
-function closeTaskSheet() {
-    const sheet = document.getElementById('protocolo-sheet');
-    sheet.classList.remove('open');
-    setTimeout(() => { sheet.hidden = true; }, 350);
-}
-
-// ─── Protocolo: Kegel timer ───
-
-const kegelState = {
-    task: null,
-    set: 1,
-    rep: 0,
-    partIndex: 0,
-    phase: 'idle',
-    phaseStartMs: 0,
-    phaseDurationMs: 0,
-    paused: false,
-    pausedAtMs: 0,
-    rafId: null,
-    dom: null,
-};
-
-function startKegelTimer(task) {
-    if (task.kegel.compound) {
-        alert('El temporizador compuesto (Fase 3) aún no está disponible. Sigue las instrucciones manualmente y márcala como hecha cuando termines.');
-        return;
-    }
-
-    if (!kegelState.dom) {
-        kegelState.dom = {
-            overlay: document.getElementById('protocolo-timer'),
-            taskLabel: document.getElementById('protocolo-timer-task'),
-            stateLabel: document.getElementById('protocolo-timer-state'),
-            pulse: document.getElementById('protocolo-timer-pulse'),
-            count: document.getElementById('protocolo-timer-count'),
-            rep: document.getElementById('protocolo-timer-rep'),
-            repTotal: document.getElementById('protocolo-timer-rep-total'),
-            set: document.getElementById('protocolo-timer-set'),
-            setTotal: document.getElementById('protocolo-timer-set-total'),
-            pause: document.getElementById('protocolo-timer-pause'),
-        };
-    }
-    const d = kegelState.dom;
-
-    kegelState.task = task;
-    kegelState.set = 1;
-    kegelState.rep = 0;
-    kegelState.paused = false;
-    d.taskLabel.textContent = task.name;
-    d.repTotal.textContent = task.kegel.reps;
-    d.setTotal.textContent = task.kegel.sets;
-    d.set.textContent = kegelState.set;
-    d.rep.textContent = '0';
-    d.pause.textContent = 'Pausar';
-    d.overlay.hidden = false;
-
-    enterPhase('ready', 3000);
-}
-
-function enterPhase(phase, durationMs) {
-    kegelState.phase = phase;
-    kegelState.phaseDurationMs = durationMs;
-    kegelState.phaseStartMs = performance.now();
-
-    const labels = { ready: 'PREPÁRATE', contract: 'CONTRAE', relax: 'RELAJA', rest: 'DESCANSA' };
-    const d = kegelState.dom;
-    d.stateLabel.textContent = labels[phase];
-    d.pulse.classList.remove('contract', 'relax', 'rest');
-    if (phase === 'contract') d.pulse.classList.add('contract');
-    else if (phase === 'relax') d.pulse.classList.add('relax');
-    else if (phase === 'rest') d.pulse.classList.add('rest');
-    d.rep.textContent = kegelState.rep;
-    d.set.textContent = kegelState.set;
-
-    if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
-    tickKegel();
-}
-
-function tickKegel() {
-    if (kegelState.paused) return;
-    const elapsed = performance.now() - kegelState.phaseStartMs;
-    const remaining = kegelState.phaseDurationMs - elapsed;
-    if (remaining <= 0) {
-        advanceKegelPhase();
-        return;
-    }
-    kegelState.dom.count.textContent = Math.ceil(remaining / 1000);
-    kegelState.rafId = requestAnimationFrame(tickKegel);
-}
-
-function advanceKegelPhase() {
-    const t = kegelState.task.kegel;
-    const phase = kegelState.phase;
-
-    if (phase === 'ready') {
-        kegelState.rep = 1;
-        enterPhase('contract', t.contract * 1000);
-    } else if (phase === 'contract') {
-        enterPhase('relax', t.relax * 1000);
-    } else if (phase === 'relax') {
-        if (kegelState.rep < t.reps) {
-            kegelState.rep++;
-            enterPhase('contract', t.contract * 1000);
-        } else if (kegelState.set < t.sets) {
-            kegelState.set++;
-            kegelState.rep = 0;
-            enterPhase('rest', (t.rest || 30) * 1000);
-        } else {
-            completeKegel();
-        }
-    } else if (phase === 'rest') {
-        kegelState.rep = 1;
-        enterPhase('contract', t.contract * 1000);
-    }
-}
-
-function completeKegel() {
-    const d = kegelState.dom;
-    d.stateLabel.textContent = '¡COMPLETO!';
-    d.count.textContent = '✓';
-    d.pulse.classList.remove('contract', 'relax', 'rest');
-    if (!isTaskDoneToday(kegelState.task.id, loadProtocolState())) {
-        toggleTaskDone(kegelState.task.id);
-        protocoloLastRenderKey = '';
-        renderProtocolo();
-    }
-    setTimeout(closeKegelTimer, 1800);
-}
-
-function closeKegelTimer() {
-    if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
-    kegelState.rafId = null;
-    kegelState.phase = 'idle';
-    kegelState.paused = false;
-    if (kegelState.dom) kegelState.dom.overlay.hidden = true;
-}
-
-function toggleKegelPause() {
-    if (kegelState.phase === 'idle') return;
-    if (!kegelState.paused) {
-        kegelState.paused = true;
-        kegelState.pausedAtMs = performance.now();
-        kegelState.dom.pause.textContent = 'Reanudar';
-        if (kegelState.rafId) cancelAnimationFrame(kegelState.rafId);
-    } else {
-        const pauseDuration = performance.now() - kegelState.pausedAtMs;
-        kegelState.phaseStartMs += pauseDuration;
-        kegelState.paused = false;
-        kegelState.dom.pause.textContent = 'Pausar';
-        tickKegel();
-    }
-}
-
-// ─── Protocolo: init ───
-
 function initProtocolo() {
-    document.getElementById('protocolo-sheet-backdrop').addEventListener('click', closeTaskSheet);
-    document.getElementById('protocolo-timer-close').addEventListener('click', closeKegelTimer);
-    document.getElementById('protocolo-timer-pause').addEventListener('click', toggleKegelPause);
-    document.getElementById('protocolo-reset-btn').addEventListener('click', () => {
-        if (confirm('¿Reiniciar el protocolo? Día 1 quedará como hoy y se borran los registros de tareas.')) {
-            resetProtocolState();
-            protocoloLastRenderKey = '';
-            renderProtocolo();
-        }
-    });
     renderProtocolo();
 }
 
